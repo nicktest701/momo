@@ -2,7 +2,7 @@ import React from "react";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { TextField } from "@mui/material";
+
 import moment from "moment";
 
 export default function CustomTimePicker({ value, setValue, customTimeInput }) {
@@ -13,7 +13,7 @@ export default function CustomTimePicker({ value, setValue, customTimeInput }) {
         minDate={new Date()}
         onChange={(time) => {
           setValue(time);
-          console.log(moment(time).format("h:mm:ss a"));
+          console.log(moment(time)?._d);
         }}
         ampm
         renderInput={customTimeInput}

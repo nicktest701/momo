@@ -45,4 +45,18 @@ router.post(
   })
 );
 
+
+router.delete(
+  "/",
+  asyncHandler(async (req, res) => {
+    const newVouchers = req.body;
+
+    const vouchers = await Voucher.insertMany(newVouchers);
+    if (!vouchers) {
+      res.status(404).json("Error saving pins.Please try again later");
+    }
+    res.sendStatus(201);
+  })
+);
+
 module.exports = router;

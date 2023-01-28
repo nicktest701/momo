@@ -5,7 +5,7 @@ export function getCategoryData(data) {
         return {
           id: _id,
           voucherType,
-          journey: `${details.origin} <=> ${details.destination}`,
+          journey: voucherType,
           date: details.date,
           time: details.time,
           price,

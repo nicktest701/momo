@@ -1,34 +1,50 @@
-export const CustomReducer = (state, action) => {
-  switch (action.type) {
+export const CustomReducer = (state, { type, payload }) => {
+  switch (type) {
+    case "openAlert":
+      return {
+        ...state,
+        alerData: {
+          severity: payload.severity,
+          message: payload.message,
+        },
+      };
+    case "closeAlert":
+      return {
+        ...state,
+        alerData: {
+          severity: "",
+          message: "",
+        },
+      };
     case "openSidebar":
       return {
         ...state,
-        openSidebar: action.payload,
+        openSidebar: payload,
       };
     case "openPreviewChecker":
       return {
         ...state,
-        openPreviewChecker: action.payload,
+        openPreviewChecker: payload,
       };
 
     case "getVoucherPaymentDetails":
       return {
         ...state,
-        voucherPaymentDetails: action.payload,
+        voucherPaymentDetails: payload,
       };
 
     case "loadedChecker":
       return {
         ...state,
         loadedChecker: {
-          meta: action.payload.meta,
-          data: action.payload.data,
+          meta: payload.meta,
+          data: payload.data,
         },
       };
     case "newCheckers":
       return {
         ...state,
-        newCheckers: action.payload,
+        newCheckers: payload,
       };
 
     case "openAddCategory":
@@ -36,31 +52,100 @@ export const CustomReducer = (state, action) => {
         ...state,
         category: {
           ...state.category,
-          open: action.payload,
+          open: payload,
         },
       };
-    case "openCinemaCategory":
+    case "openAddCinemaCategory":
       return {
         ...state,
         cinemaCategory: {
           ...state.category,
-          open: action.payload,
+          open: payload,
         },
       };
-    case "openStadiumCategory":
+    case "openAddStadiumCategory":
       return {
         ...state,
         stadiumCategory: {
           ...state.category,
-          open: action.payload,
+          open: payload,
         },
       };
-    case "openBusCategory":
+    case "openAddBusCategory":
       return {
         ...state,
         busCategory: {
           ...state.category,
-          open: action.payload,
+          open: payload,
+        },
+      };
+
+    case "openEditCategory":
+      return {
+        ...state,
+        editCategory: {
+          open: payload.open,
+          data: payload.data,
+        },
+      };
+    case "closeEditCategory":
+      return {
+        ...state,
+        editCategory: {
+          ...state.editCategory,
+          open: false,
+        },
+      };
+
+    case "openEditCinemaCategory":
+      return {
+        ...state,
+        editCinemaCategory: {
+          open: payload.open,
+          data: payload.data,
+        },
+      };
+
+    case "closeEditCinemaCategory":
+      return {
+        ...state,
+        editCinemaCategory: {
+          ...state.editCinemaCategory,
+          open: false,
+        },
+      };
+
+    case "openEditStadiumCategory":
+      return {
+        ...state,
+        editStadiumCategory: {
+          open: payload.open,
+          data: payload.data,
+        },
+      };
+    case "closeEditStadiumCategory":
+      return {
+        ...state,
+        editStadiumCategory: {
+          ...state.editStadiumCategory,
+          open: false,
+        },
+      };
+    case "openEditBusCategory":
+      return {
+        ...state,
+        editBusCategory: {
+          open: payload.open,
+          data: payload.data,
+        },
+      };
+
+    case "closeEditBusCategory":
+      return {
+        ...state,
+        editBusCategory: {
+          ...state.editBusCategory,
+          open: false,
         },
       };
 
@@ -69,14 +154,14 @@ export const CustomReducer = (state, action) => {
         ...state,
         category: {
           ...state.category,
-          category: action.payload,
+          category: payload,
         },
       };
 
     case "loadVouchers":
       return {
         ...state,
-        transaction: action.payload,
+        transaction: payload,
       };
 
     default:

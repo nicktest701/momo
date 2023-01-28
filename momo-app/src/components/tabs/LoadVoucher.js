@@ -1,5 +1,8 @@
-import { Add } from "@mui/icons-material";
-import { Autocomplete, Box, Button, TextField } from "@mui/material";
+import  Add from "@mui/icons-material/Add";
+import Autocomplete from "@mui/material/Autocomplete";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 import MaterialTable, { MTableToolbar } from "material-table";
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";

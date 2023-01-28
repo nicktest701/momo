@@ -6,13 +6,14 @@ const CategorySchema = new mongoose.Schema(
   {
     category: {
       type: String,
+      lowercase: true,
       required: true,
-    },
+    }, 
     voucherType: {
       type: String,
     },
     price: {
-      type: String,
+      type: Number,
       required: true,
     },
     details: Object,

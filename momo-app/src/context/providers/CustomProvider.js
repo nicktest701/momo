@@ -4,6 +4,10 @@ import { CustomReducer } from "../reducers/CustomReducer";
 export const CustomContext = React.createContext();
 function CustomProvider({ children }) {
   const initialValues = {
+    alertData: {
+      severity: "info",
+      message: "Hellloooo",
+    },
     openSidebar: false,
     openPreviewChecker: false,
     voucherPaymentDetails: {
@@ -16,6 +20,7 @@ function CustomProvider({ children }) {
     },
     newCheckers: [],
 
+    ///add category
     category: {
       open: false,
       category: "",
@@ -31,6 +36,23 @@ function CustomProvider({ children }) {
     busCategory: {
       open: false,
       category: "",
+    },
+    ///add category
+    editCategory: {
+      open: false,
+      data: "",
+    },
+    editCinemaCategory: {
+      open: false,
+      data: "",
+    },
+    editStadiumCategory: {
+      open: false,
+      data: "",
+    },
+    editBusCategory: {
+      open: false,
+      data: "",
     },
 
     ///vouchers

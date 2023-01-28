@@ -48,7 +48,6 @@ function App() {
         defaultProps: {
           // fullWidth:true,
           disableElevation: true,
-
           size: "large",
           sx: {
             paddingX: 2,

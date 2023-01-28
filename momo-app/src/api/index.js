@@ -1,14 +1,23 @@
 /* eslint-disable import/no-anonymous-default-export */
 import { makePayment, getPayment } from "./paymentAPI";
 import { sendVoucherMail } from "./transactionAPI";
-import { getAllVouchersCategory, postCategory } from "./categoryAPI";
-import {getVoucherByVoucherType} from './voucherAPI'
+import {
+  getAllVouchersCategory,
+  getCategory,
+  postCategory,
+  editCategory,
+  deleteCategory,
+} from "./categoryAPI";
+import { getVoucherByVoucherType } from "./voucherAPI";
 
 import { addBeceCard } from "./cardApi";
 export default {
   //CATEGORY
   getAllVouchersCategory,
+  getCategory,
   postCategory,
+  editCategory,
+  deleteCategory,
 
   //VOUCHERS
   getVoucherByVoucherType,

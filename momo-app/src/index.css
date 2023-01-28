@@ -1,3 +1,7 @@
+:root {
+  --primary: "#333";
+  --secondary: "#008000";
+}
 *,
 *::after,
 *::before {
@@ -5,6 +9,7 @@
   padding: 0;
   box-sizing: border-box;
 }
+
 html {
   scroll-behavior: smooth;
 }
@@ -141,4 +146,20 @@ footer {
 
 .swal2-container {
   z-index: 110000 !important;
+  font-family: inherit;
+  background-color: #333 !important;
+}
+.swal2-title {
+  font-size: 1.2rem !important;
+}
+.swal2-html-container {
+  font-size: 0.85rem !important;
+}
+.swal2-confirm,
+.swal2-cancel {
+  font-size: 0.75rem !important;
+}
+
+.swal2-confirm {
+  background-color: #008000 !important;
 }

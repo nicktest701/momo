@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import {
-  Autocomplete,
   Button,
   Dialog,
   DialogActions,
@@ -12,64 +11,77 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Formik } from "formik";
 import { CustomContext } from "../../context/providers/CustomProvider";
-import { postCategory } from "../../api/categoryAPI";
-import Transition from "../Transition";
-import CustomTimePicker from "../inputs/CustomTimePicker";
-import CustomDatePicker from "../inputs/CustomDatePicker";
+import { editCategory, getCategory, postCategory } from "../../api/categoryAPI";
+import Transition from "../../components/Transition";
+import CustomDatePicker from "../../components/inputs/CustomDatePicker";
+import CustomTimePicker from "../../components/inputs/CustomTimePicker";
 import moment from "moment";
-import { cities_regions } from "../../mocks/cities";
-const AddBusCategory = () => {
+const EditStadiumCategory = () => {
   //context
   const queryClient = useQueryClient();
   const { customState, customDispatch } = useContext(CustomContext);
-  const [origin, setOrigin] = useState({ id: "", city: "", region: "" });
-  const [destination, setDestination] = useState({
-    id: "",
-    city: "",
-    region: "",
-  });
-  const [voucherType, setVoucherType] = useState(moment());
-
-  const [price, setPrice] = useState(Number(0));
-
+  const editData = customState.editStadiumCategory;
+  const [voucherType, setVoucherType] = useState("");
+  const [home, setHome] = useState("");
+  const [away, setAway] = useState("");
+  const [venue, setVenue] = useState("");
   const [time, setTime] = useState(moment());
   const [date, setDate] = useState(moment());
+  const [price, setPrice] = useState(Number(0));
   const [message, setMessage] = useState("");
 
   const initialValues = {
-    category: "bus",
+    category: "stadium",
+    voucherType,
+    home,
+    away,
     price,
-    origin: origin.city,
-    destination: destination.city,
-    date: moment(date).format("dddd,Do MMMM YYYY"),
-    time: moment(time).format("h:mm a"),
+    venue,
+    date: moment(date),
+    time: moment(time),
     message,
   };
 
-  const { mutateAsync } = useMutation(postCategory);
+  const stadium = useQuery({
+    queryKey: ["category", editData?.data],
+    queryFn: () => getCategory(editData?.data),
+    enabled: !!editData?.data,
+    onSuccess: (stadium) => {
+      setVoucherType(stadium.voucherType);
+      setHome(stadium.home);
+      setAway(stadium.away);
+      setVenue(stadium.venue);
+      setPrice(stadium.price);
+      setTime(stadium.details.time);
+      setDate(stadium.details.date);
+      setMessage(stadium.details.message);
+    },
+  });
+
+  const { mutateAsync } = useMutation(editCategory);
   const onSubmit = (values, option) => {
-    const newBusTicket = {
+    const updatedStadiumTicket = {
+      id: stadium.data?._id,
       category: values.category,
-      voucherType: `${values.origin} to ${values.destination}`,
-      price: values.price,
+      voucherType: `${values.home} Vs ${values.away}(${values.voucherType})`,
+      price: Number(values.price),
       details: {
-        origin: values.origin,
-        destination: values.destination,
+        matchType: values.voucherType,
+        home: values.home,
+        away: values.away,
+        venue: values.venue,
         date: values.date,
         time: values.time,
         message: values.message,
       },
     };
 
-    console.log(newBusTicket);
-
-    mutateAsync(newBusTicket, {
+    mutateAsync(updatedStadiumTicket, {
       onSettled: () => {
         option.setSubmitting(false);
-
         queryClient.invalidateQueries(["category"]);
       },
       onSuccess: (data) => {
@@ -83,7 +95,7 @@ const AddBusCategory = () => {
 
   ///Close Add Category
   const handleClose = () => {
-    customDispatch({ type: "openBusCategory", payload: false });
+    customDispatch({ type: "closeEditStadiumCategory" });
   };
 
   return (
@@ -92,91 +104,54 @@ const AddBusCategory = () => {
       onSubmit={onSubmit}
       enableReinitialize={true}
     >
-      {({ values, errors, touched, handleChange, handleSubmit }) => {
+      {({ errors, touched, handleSubmit }) => {
         return (
           <Dialog
             maxWidth="xs"
             fullWidth
             TransitionComponent={Transition}
-            open={customState.busCategory.open}
+            open={editData?.open}
           >
-            <DialogTitle>New Bus Ticket</DialogTitle>
+            <DialogTitle>Edit Stadium Ticket</DialogTitle>
             <DialogContent>
               <Stack rowGap={2} paddingY={2}>
-                {/* <TextField
+                <TextField
                   size="small"
-                  label="Bus Type"
-                  value={values.voucherType}
-                  onChange={handleChange("voucherType")}
+                  label="Match Type"
+                  value={voucherType}
+                  onChange={(e) => setVoucherType(e.target.value)}
                   error={Boolean(touched.voucherType && errors.voucherType)}
-                  helperText={touched.voucherType && errors.voucherType}
-                /> */}
-                <Autocomplete
-                  options={cities_regions}
-                  fullWidth
-                  closeText=" "
-                  disableClearable
-                  isOptionEqualToValue={(option, value) =>
-                    value.id === undefined ||
-                    value.id === "" ||
-                    option.id === value.id
+                  helperText={
+                    touched.voucherType && errors.voucherType
+                      ? errors.voucherType
+                      : "eg.Friendly Match,Cup Final,League Match"
                   }
-                  getOptionLabel={(option) =>
-                    `${option.city},${option.region}` || ""
-                  }
-                  value={origin}
-                  onChange={(e, value) => setOrigin(value)}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      size="small"
-                      label="Origin(From)"
-                      error={Boolean(touched.origin && errors.origin)}
-                      helperText={
-                        touched.origin && errors.origin
-                          ? errors.origin
-                          : "eg. Kumasi"
-                      }
-                    />
-                  )}
                 />
-
-                {/* Destination  */}
-                <Autocomplete
-                  options={cities_regions}
-                  fullWidth
-                  closeText=" "
-                  disableClearable
-                  isOptionEqualToValue={(option, value) =>
-                    value.id === undefined ||
-                    value.id === "" ||
-                    option.id === value.id
+                <TextField
+                  size="small"
+                  label="Home Team"
+                  value={home}
+                  onChange={(e) => setHome(e.target.value)}
+                  error={Boolean(touched.home && errors.home)}
+                  helperText={
+                    touched.home && errors.home ? errors.home : "eg. TeamA"
                   }
-                  getOptionLabel={(option) =>
-                    `${option.city},${option.region}` || ""
-                  }
-                  value={destination}
-                  onChange={(e, value) => setDestination(value)}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      size="small"
-                      label="Destination(To)"
-                      error={Boolean(touched.destination && errors.destination)}
-                      helperText={
-                        touched.destination && errors.destination
-                          ? errors.destination
-                          : "eg. Cape Coast"
-                      }
-                    />
-                  )}
                 />
-
+                <TextField
+                  size="small"
+                  label="Away Team"
+                  value={away}
+                  onChange={(e) => setAway(e.target.value)}
+                  error={Boolean(touched.away && errors.away)}
+                  helperText={
+                    touched.away && errors.away ? errors.away : "eg. TeamB"
+                  }
+                />
                 <TextField
                   size="small"
                   type="number"
-                  inputMode="decimal"
-                  label="Fare"
+                  inputMode="numeric"
+                  label="Price"
                   placeholder="Price here"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
@@ -195,7 +170,18 @@ const AddBusCategory = () => {
                   error={Boolean(touched.price && errors.price)}
                   helperText={touched.price && errors.price}
                 />
-
+                <TextField
+                  size="small"
+                  label="Venue"
+                  value={venue}
+                  onChange={(e) => setVenue(e.target.value)}
+                  error={Boolean(touched.venue && errors.venue)}
+                  helperText={
+                    touched.venue && errors.venue
+                      ? errors.venue
+                      : "eg. Kumasi,Ghana"
+                  }
+                />
                 <CustomDatePicker
                   value={date}
                   setValue={setDate}
@@ -209,7 +195,6 @@ const AddBusCategory = () => {
                     />
                   )}
                 />
-
                 <CustomTimePicker
                   value={time}
                   setValue={setTime}
@@ -237,7 +222,7 @@ const AddBusCategory = () => {
             <DialogActions sx={{ padding: 1 }}>
               <Button onClick={handleClose}>Cancel</Button>
               <LoadingButton variant="contained" onClick={handleSubmit}>
-                Add
+                Save Changes
               </LoadingButton>
             </DialogActions>
           </Dialog>
@@ -247,4 +232,4 @@ const AddBusCategory = () => {
   );
 };
 
-export default React.memo(AddBusCategory);
+export default React.memo(EditStadiumCategory);

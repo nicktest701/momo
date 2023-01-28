@@ -30,66 +30,70 @@ import Bus from "../bus";
 import BusPreview from "../bus/BusPreview";
 import BookTicket from "../bus/BookTicket";
 import BusTicketCheckout from "../bus/BusTicketCheckout";
+import { Alert } from "@mui/material";
 
 function Shell() {
   const CheckoutPrint = React.lazy(() => import("../CheckoutPrint"));
   return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Dashboard />} />
-        <Route path="prepaid" element={<Prepaid />} />
-        <Route path="airtime" element={<Airtime />} />
+    <>
+     
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="prepaid" element={<Prepaid />} />
+          <Route path="airtime" element={<Airtime />} />
 
-        <Route path="evoucher" element={<EVoucher />}>
-          <Route index element={<Shop />} />
-          <Route path="waec-checker" element={<WAECChecker />} />
-          <Route path="school-placement" element={<SchoolPlacement />} />
-          <Route path="security-service" element={<SecurityService />} />
-          <Route path="university-form" element={<UniversityForms />} />
-          <Route path="cinema-ticket" element={<CinemaTickets />} />
-          <Route path="stadia-ticket" element={<StadiaTickets />} />
-          {/* bus */}
-          <Route path="bus-ticket" element={<Bus />}>
-            <Route index element={<BusTickets />} />
-            <Route path="preview" element={<BusPreview />} />
-            <Route path="preview/buy" element={<BusTicketCheckout />} />
-          </Route>
+          <Route path="evoucher" element={<EVoucher />}>
+            <Route index element={<Shop />} />
+            <Route path="waec-checker" element={<WAECChecker />} />
+            <Route path="school-placement" element={<SchoolPlacement />} />
+            <Route path="security-service" element={<SecurityService />} />
+            <Route path="university-form" element={<UniversityForms />} />
+            <Route path="cinema-ticket" element={<CinemaTickets />} />
+            <Route path="stadia-ticket" element={<StadiaTickets />} />
+            {/* bus */}
+            <Route path="bus-ticket" element={<Bus />}>
+              <Route index element={<BusTickets />} />
+              <Route path="preview" element={<BusPreview />} />
+              <Route path="preview/buy" element={<BusTicketCheckout />} />
+            </Route>
 
-          {/* <Route path="checker" element={<Checker />}>
+            {/* <Route path="checker" element={<Checker />}>
             <Route index element={<CheckerDashboard />} />
           </Route> */}
-        </Route>
+          </Route>
 
-        <Route path="/add" element={<AddChecker />}>
-          <Route index element={<CheckerDashboard />} />
-          {PAGES.map((item, index) => {
-            return (
-              <Route
-                key={index}
-                path={item.route}
-                element={<AddVoucher {...item} />}
-              />
-            );
-          })}
+          <Route path="/add" element={<AddChecker />}>
+            <Route index element={<CheckerDashboard />} />
+            {PAGES.map((item, index) => {
+              return (
+                <Route
+                  key={index}
+                  path={item.route}
+                  element={<AddVoucher {...item} />}
+                />
+              );
+            })}
+          </Route>
         </Route>
-      </Route>
-      <Route path="/user" element={<User />}>
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
-      </Route>
-      <Route path="payment" element={<Payment />} />
-      <Route path="checkout" element={<Checkout />} />
-      <Route
-        path="checkout-print"
-        element={
-          <Suspense fallback={<PayLoading />}>
-            <CheckoutPrint />
-          </Suspense>
-        }
-      />
-      <Route path="error" element={<ErrorPage />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        <Route path="/user" element={<User />}>
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+        </Route>
+        <Route path="payment" element={<Payment />} />
+        <Route path="checkout" element={<Checkout />} />
+        <Route
+          path="checkout-print"
+          element={
+            <Suspense fallback={<PayLoading />}>
+              <CheckoutPrint />
+            </Suspense>
+          }
+        />
+        <Route path="error" element={<ErrorPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
   );
 }
 

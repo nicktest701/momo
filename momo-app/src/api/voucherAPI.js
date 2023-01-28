@@ -36,3 +36,19 @@ export const addVoucher = async (data) => {
     throw error.response.data;
   }
 };
+
+export const removeVoucher = async (id) => {
+  try {
+    const response = await axios({
+      method: "DELETE",
+      url: `${BASE_URL}/voucher`,
+      params: {
+        id,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error.response.data);
+    throw error.response.data;
+  }
+};

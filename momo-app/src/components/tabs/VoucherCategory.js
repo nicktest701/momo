@@ -1,53 +1,129 @@
 import React, { useContext, useMemo } from "react";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Icon, IconButton, Stack } from "@mui/material";
 import MaterialTable, { MTableToolbar } from "material-table";
+import Swal from "sweetalert2";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { tableIcons } from "../../config/tableIcons";
-import { Add } from "@mui/icons-material";
+import { Add, DeleteRounded, EditRounded } from "@mui/icons-material";
 import { CustomContext } from "../../context/providers/CustomProvider";
 import { useGetVoucherCategory } from "../../hooks/useGetVoucherCategory";
-import AddCinemaCategory from "../modals/AddCinemaCategory";
-import AddStadiumCategory from "../modals/AddStadiumCategory";
-// import DetailsItem from "../items/DetailsItem";
-import AddBusCategory from "../modals/AddBusCategory";
+import AddCinemaCategory from "../../pages/cinema/AddCinemaCategory";
+import AddStadiumCategory from "../../pages/stadium/AddStadiumCategory";
+import AddBusCategory from "../../pages/bus/AddBusCategory";
 import { getColumns } from "../../config/getColumns";
+import { deleteCategory } from "../../api/categoryAPI";
+import EditCinemaCategory from "../../pages/cinema/EditCinemaCategory";
+import EditStadiumCategory from "../../pages/stadium/EditStadiumCategory";
+import EditBusCategory from "../../pages/bus/EditBusCategory";
 
 const VoucherCategory = (props) => {
+  const queryClient = useQueryClient();
   const { customDispatch } = useContext(CustomContext);
   const category = localStorage.getItem("category");
   const { categories, loading } = useGetVoucherCategory(category);
 
- 
+  const { mutateAsync } = useMutation({
+    mutationFn: deleteCategory,
+  });
 
   const modifiedColumns = useMemo(() => {
     const columns = getColumns(category).map((column) => {
       return { ...column };
     });
 
-    // if (["stadium", "cinema", "bus"].includes(category)) {
-    //   const detailColumns = {
-    //     title: "Details",
-    //     field: "details",
-    //     render: ({ details }) => {
-    //       return <DetailsItem details={details} />;
-    //     },
-    //   };
-    //   columns.push(detailColumns);
-    // }
+    function removeCategory(id) {
+      Swal.fire({
+        title: "Removing",
+        text: "Do you want to remove?",
+        backdrop: false,
+        showCancelButton: true,
+      }).then(({ isConfirmed }) => {
+        if (isConfirmed) {
+          mutateAsync(id, {
+            onSettled: () => {
+              queryClient.invalidateQueries(["category"]);
+            },
+            onSuccess: (data) => {
+              alert(data);
+            },
+            onError: (error) => {
+              alert(error);
+            },
+          });
+        }
+      });
+    }
 
+    const handleOpenEdit = (id) => {
+      if (category === "cinema") {
+        customDispatch({
+          type: "openEditCinemaCategory",
+          payload: {
+            open: true,
+            data: id,
+          },
+        });
+        return;
+      }
+      if (category === "stadium") {
+        customDispatch({
+          type: "openEditStadiumCategory",
+          payload: {
+            open: true,
+            data: id,
+          },
+        });
+        return;
+      }
+      if (category === "bus") {
+        customDispatch({
+          type: "openEditBusCategory",
+          payload: {
+            open: true,
+            data: id,
+          },
+        });
+        return;
+      }
+
+      customDispatch({
+        type: "openEditCategory",
+        payload: {
+          open: true,
+          data: id,
+        },
+      });
+      return;
+    };
+
+    columns.push({
+      field: null,
+      title: "Action",
+      render: ({ id }) => (
+        <Stack direction="row" spacing={1}>
+          <IconButton onClick={() => handleOpenEdit(id)}>
+            <EditRounded />
+          </IconButton>
+          <IconButton onClick={() => removeCategory(id)}>
+            <DeleteRounded />
+          </IconButton>
+        </Stack>
+      ),
+    });
     return columns;
-  }, [category]);
+  }, [category, customDispatch, mutateAsync, queryClient]);
 
-  const handleOpen = () => {
+  const handleOpenAdd = () => {
     if (category === "cinema") {
-      customDispatch({ type: "openCinemaCategory", payload: true });
+      customDispatch({ type: "openAddCinemaCategory", payload: true });
       return;
     }
     if (category === "stadium") {
-      customDispatch({ type: "openStadiumCategory", payload: true });
+      customDispatch({ type: "openAddStadiumCategory", payload: true });
       return;
     }
     if (category === "bus") {
-      customDispatch({ type: "openBusCategory", payload: true });
+      customDispatch({ type: "openAddBusCategory", payload: true });
       return;
     }
 
@@ -72,7 +148,7 @@ const VoucherCategory = (props) => {
                   <Button
                     variant="contained"
                     startIcon={<Add />}
-                    onClick={handleOpen}
+                    onClick={handleOpenAdd}
                   >
                     New {props.category}
                   </Button>
@@ -96,11 +172,29 @@ const VoucherCategory = (props) => {
           padding: "10px",
         }}
       />
+      {/* cinema  */}
       <AddCinemaCategory />
+      <EditCinemaCategory />
+
+      {/* stadium  */}
       <AddStadiumCategory />
+      <EditStadiumCategory />
+      {/* bus  */}
       <AddBusCategory />
+      <EditBusCategory />
     </Box>
   );
 };
 
 export default VoucherCategory;
+
+// if (["stadium", "cinema", "bus"].includes(category)) {
+//   const detailColumns = {
+//     title: "Details",
+//     field: "details",
+//     render: ({ details }) => {
+//       return <DetailsItem details={details} />;
+//     },
+//   };
+//   columns.push(detailColumns);
+// }

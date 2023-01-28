@@ -44,7 +44,7 @@ const LoadChecker = ({ open, setOpen }) => {
     msg: "",
   });
 
-  //LOAD Students from file excel,csv
+  //LOAD Checkers from file excel,csv
   function handleLoadFile(e) {
     // setIsLoading(true);
     const files = e.target.files[0];
@@ -132,6 +132,17 @@ const LoadChecker = ({ open, setOpen }) => {
           </IconButton>
         </Stack>
       </DialogTitle>
+
+      <Box display="flex" justifyContent="flex-end" paddingY={2}>
+        {customState.newCheckers?.length !== 0 && (
+          <DialogActions sx={{ paddingX: 5 }}>
+            <Button onClick={handleCancelSubmitPins}>Cancel</Button>
+            <LoadingButton variant="contained" onClick={handleSubmitPins}>
+              Save Pins
+            </LoadingButton>
+          </DialogActions>
+        )}
+      </Box>
       <DialogContent>
         <Box style={{ paddingBottom: "16px" }}>
           <Content style={{ padding: "8px" }}>
@@ -161,6 +172,7 @@ const LoadChecker = ({ open, setOpen }) => {
                   placeholder="Load Data Here"
                   size="small"
                   value={dataPath}
+                  fullWidth
                   InputProps={{
                     readOnly: true,
                   }}
@@ -181,7 +193,7 @@ const LoadChecker = ({ open, setOpen }) => {
                   }}
                   title="Load Data from file"
                 >
-                  Browse
+                  Load
                 </FormLabel>
                 <Input
                   type="file"
@@ -233,22 +245,6 @@ const LoadChecker = ({ open, setOpen }) => {
                   {voucherData?.voucherType} Serials & Pincodes
                 </Typography>
               </Stack>
-              <Box display="flex" justifyContent="flex-end" paddingY={2}>
-                {customState.newCheckers?.length !== 0 && (
-                  <ButtonGroup>
-                    <Button variant="outlined" onClick={handleCancelSubmitPins}>
-                      Cancel
-                    </Button>
-                    <LoadingButton
-                      variant="contained"
-                      onClick={handleSubmitPins}
-                    >
-                      Save Pins
-                    </LoadingButton>
-                  </ButtonGroup>
-                )}
-              </Box>
-
               <CheckerTable />
             </Box>
           </Content>
@@ -258,9 +254,6 @@ const LoadChecker = ({ open, setOpen }) => {
           />
         </Box>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={() => setOpen(false)}>Close</Button>
-      </DialogActions>
     </Dialog>
   );
 };

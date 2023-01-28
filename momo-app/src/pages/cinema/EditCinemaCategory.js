@@ -11,18 +11,21 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Formik } from "formik";
 import { CustomContext } from "../../context/providers/CustomProvider";
-import { postCategory } from "../../api/categoryAPI";
-import Transition from "../Transition";
+import { editCategory, getCategory, postCategory } from "../../api/categoryAPI";
 import moment from "moment";
-import CustomTimePicker from "../inputs/CustomTimePicker";
-import CustomDatePicker from "../inputs/CustomDatePicker";
-const AddCinemaCategory = () => {
+
+import Transition from "../../components/Transition";
+import CustomDatePicker from "../../components/inputs/CustomDatePicker";
+import CustomTimePicker from "../../components/inputs/CustomTimePicker";
+const EditCinemaCategory = () => {
   //context
   const queryClient = useQueryClient();
   const { customState, customDispatch } = useContext(CustomContext);
+  const editData = customState.editCinemaCategory;
+
   const [voucherType, setVoucherType] = useState("");
   const [theatre, setTheatre] = useState("");
   const [location, setLocation] = useState("");
@@ -37,17 +40,33 @@ const AddCinemaCategory = () => {
     price,
     theatre,
     location,
-    date: moment(date).format("dddd,Do MMMM YYYY"),
-    time: moment(time).format("h:mm a"),
+    date: moment(date),
+    time: moment(time),
     message,
   };
+  const cinema = useQuery({
+    queryKey: ["category", editData?.data],
+    queryFn: () => getCategory(editData?.data),
+    enabled: !!editData?.data,
+    onSuccess: (cinema) => {
+      console.log(cinema);
+      setVoucherType(cinema.voucherType);
+      setTheatre(cinema.details.theatre);
+      setLocation(cinema.details.location);
+      setPrice(cinema.price);
+      setTime(cinema.details.time);
+      setDate(cinema.details.date);
+      setMessage(cinema.details.message);
+    },
+  });
 
-  const { mutateAsync } = useMutation(postCategory);
+  const { mutateAsync } = useMutation(editCategory);
   const onSubmit = (values, option) => {
     const newCinemaTicket = {
+      id: cinema.data?._id,
       category: values.category,
       voucherType: values.voucherType,
-      price: Number(values.price),
+      price: values.price,
       details: {
         movie: values.voucherType,
         theatre: values.theatre,
@@ -58,25 +77,23 @@ const AddCinemaCategory = () => {
       },
     };
 
-    console.log(newCinemaTicket);
     mutateAsync(newCinemaTicket, {
       onSettled: () => {
         option.setSubmitting(false);
-
         queryClient.invalidateQueries(["category"]);
       },
       onSuccess: (data) => {
         console.log(data);
       },
       onError: (error) => {
-        console.log(error.message);
+        console.log(error);
       },
     });
   };
 
   ///Close Add Category
   const handleClose = () => {
-    customDispatch({ type: "openCinemaCategory", payload: false });
+    customDispatch({ type: "closeEditCinemaCategory" });
   };
 
   return (
@@ -91,9 +108,9 @@ const AddCinemaCategory = () => {
             maxWidth="xs"
             fullWidth
             TransitionComponent={Transition}
-            open={customState.cinemaCategory.open}
+            open={editData?.open}
           >
-            <DialogTitle>New Cinema Ticket</DialogTitle>
+            <DialogTitle>Edit Cinema Ticket</DialogTitle>
             <DialogContent>
               <Stack rowGap={2} paddingY={2}>
                 <TextField
@@ -184,7 +201,7 @@ const AddCinemaCategory = () => {
             <DialogActions sx={{ padding: 1 }}>
               <Button onClick={handleClose}>Cancel</Button>
               <LoadingButton variant="contained" onClick={handleSubmit}>
-                Add
+                Save Changes
               </LoadingButton>
             </DialogActions>
           </Dialog>
@@ -194,4 +211,4 @@ const AddCinemaCategory = () => {
   );
 };
 
-export default React.memo(AddCinemaCategory);
+export default React.memo(EditCinemaCategory);

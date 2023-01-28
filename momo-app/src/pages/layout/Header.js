@@ -8,6 +8,7 @@ import {
   Button,
   Divider,
   Avatar,
+  Alert,
 } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -18,9 +19,10 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { IMAGES } from "../../constants";
 import Sidebar from "./Sidebar";
 import { CustomContext } from "../../context/providers/CustomProvider";
+import GlobalAlert from "../../components/alert/GlobalAlert";
 
 function Header() {
-  const {  customDispatch } = useContext(CustomContext);
+  const { customState, customDispatch } = useContext(CustomContext);
 
   const [shadow, setShadow] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -60,6 +62,7 @@ function Header() {
   return (
     <header style={{ zIndex: 20, ...shadow }}>
       <AppBar elevation={0} sx={{ justifyContent: "center" }} color="inherit">
+        {customState.alertData.message && <GlobalAlert />}
         <Toolbar>
           <IconButton
             edge="start"

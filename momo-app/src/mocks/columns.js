@@ -1,5 +1,6 @@
 import { Chip, ListItemText } from "@mui/material";
 import { currencyFormatter, IMAGES } from "../constants";
+import moment from "moment";
 
 export const shopRows = [
   {
@@ -177,10 +178,12 @@ export const busTicketColumns = [
     field: "date",
     title: "Date/Time",
     render: (rowData) => (
-      <ListItemText primary={rowData.date} secondary={rowData.time} />
+      <ListItemText
+        primary={moment(rowData.date).format("dddd,Do MMMM YYYY")}
+        secondary={moment(rowData.time).format("h:mm a")}
+      />
     ),
   },
-
   {
     field: "price",
     title: "Fare",
@@ -208,7 +211,10 @@ export const cinemaTicketColumns = [
     field: "date",
     title: "Date",
     render: (rowData) => (
-      <ListItemText primary={rowData.date} secondary={rowData.time} />
+      <ListItemText
+        primary={moment(rowData.date).format("dddd,Do MMMM YYYY")}
+        secondary={moment(rowData.time).format("h:mm a")}
+      />
     ),
   },
   {
@@ -235,10 +241,12 @@ export const stadiumTicketColumns = [
     field: "date",
     title: "Date",
     render: (rowData) => (
-      <ListItemText primary={rowData.date} secondary={rowData.time} />
+      <ListItemText
+        primary={moment(rowData.date).format("dddd,Do MMMM YYYY")}
+        secondary={moment(rowData.time).format("h:mm a")}
+      />
     ),
   },
-
   {
     field: "price",
     title: "Price",
