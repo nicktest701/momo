@@ -54,7 +54,7 @@ const AddVoucher = ({ title, category, note, type }) => {
         </TabContext>
       </Container>
 
-      <AddCategory />
+
     </>
   );
 };

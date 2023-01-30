@@ -50,10 +50,10 @@ const EditStadiumCategory = () => {
     queryFn: () => getCategory(editData?.data),
     enabled: !!editData?.data,
     onSuccess: (stadium) => {
-      setVoucherType(stadium.voucherType);
-      setHome(stadium.home);
-      setAway(stadium.away);
-      setVenue(stadium.venue);
+      setVoucherType(stadium.details.matchType);
+      setHome(stadium.details.home);
+      setAway(stadium.details.away);
+      setVenue(stadium.details.venue);
       setPrice(stadium.price);
       setTime(stadium.details.time);
       setDate(stadium.details.date);

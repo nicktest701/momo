@@ -1,5 +1,7 @@
 import React from "react";
-import { Autocomplete, InputAdornment, TextField } from "@mui/material";
+import Autocomplete from "@mui/material/Autocomplete";
+import InputAdornment from "@mui/material/InputAdornment";
+import TextField from "@mui/material/TextField";
 import { cities_regions } from "../../mocks/cities";
 
 const BusSearch = ({ label, value, setValue, icon }) => {
@@ -9,7 +11,10 @@ const BusSearch = ({ label, value, setValue, icon }) => {
       fullWidth
       closeText=" "
       isOptionEqualToValue={(option, value) =>
-        value.id === undefined || value.id === "" || option.id === value.id
+        value.id === undefined ||
+        value.id === null ||
+        value.id === "" ||
+        option.id === value.id
       }
       getOptionLabel={(option) => `${option.city},${option.region}` || ""}
       value={value}

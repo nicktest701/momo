@@ -1,5 +1,6 @@
 import React from "react";
-import { Typography, Avatar, Stack } from "@mui/material";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
 
 function ShopCard({ title, img, content, path }) {
@@ -19,26 +20,24 @@ function ShopCard({ title, img, content, path }) {
     };
   };
   return (
-    <Stack sx={cardStyles()} spacing={3}>
-      <Typography
-        title={title}
-        sx={{ textAlign: "center",}}
-        variant="h6"
-      >
-        {title}
-      </Typography>
-      <Avatar
-        variant="square"
-        src={img}
-        alt="imag"
-        sx={{ width: 80, height: 80 }}
-      />
+    <Link to={path} style={{ textDecoration: "none", color: "#333" }}>
+      <Stack sx={cardStyles()} spacing={3}>
+        <Typography title={title} sx={{ textAlign: "center" }} variant="h6">
+          {title}
+        </Typography>
 
-      <Typography variant="body2">{content}</Typography>
-      <Link className="button-link" to={path}>
-        Proceed to buy
-      </Link>
-    </Stack>
+        <img
+          src={img}
+          alt="voucher_logo"
+          style={{ width: 80, height: 80, objectFit: "contain" }}
+        />
+
+        <Typography variant="body2">{content}</Typography>
+        <Link className="button-link" to={path}>
+          Proceed to buy
+        </Link>
+      </Stack>
+    </Link>
   );
 }
 

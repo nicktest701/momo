@@ -28,10 +28,14 @@ function Sidebar() {
       type: "openSidebar",
       payload: false,
     });
-  
   };
   return (
-    <Drawer anchor="left" open={customState.openSidebar} onClose={handleClose}>
+    <Drawer
+      anchor="left"
+      open={customState.openSidebar}
+      onClose={handleClose}
+      // variant={{ xs: "persistent", md: "permanent" }}
+    >
       <Stack role="presentation" width="280px" spacing={2} paddingY={2}>
         <IconButton
           edge="end"

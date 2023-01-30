@@ -1,31 +1,30 @@
 import React, { useState, useContext } from "react";
-import {
-  Alert,
-  Box,
-  Button,
-  ButtonGroup,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  FormLabel,
-  IconButton,
-  Input,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import FormLabel from "@mui/material/FormLabel";
+import IconButton from "@mui/material/IconButton";
+import Input from "@mui/material/Input";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+
 import _ from "lodash";
 import { CustomContext } from "../../context/providers/CustomProvider";
 import Content from "../Content";
 import PreviewChecker from "./PreviewChecker";
-import { LoadingButton } from "@mui/lab";
+import LoadingButton from "@mui/lab/LoadingButton";
 import { Close } from "@mui/icons-material";
 import CheckerTable from "../tables/CheckerTable";
 import { addVoucher } from "../../api/voucherAPI";
 import { readXLSX } from "../../config/readXLSX";
 import { readCSV } from "../../config/readCSV";
 import Transition from "../Transition";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const CSV_FILE_TYPE = "text/csv";
 const XLSX_FILE_TYPE =
@@ -34,7 +33,7 @@ const XLS_FILE_TYPE = "application/vnd.ms-excel";
 
 const LoadChecker = ({ open, setOpen }) => {
   const voucherData = JSON.parse(localStorage.getItem("@voucher_type")) || "";
-
+  const queryClient = useQueryClient();
   const { customState, customDispatch } = useContext(CustomContext);
   const [openPreviewChecker, setOpenPreviewChecker] = useState(false);
 
@@ -87,24 +86,30 @@ const LoadChecker = ({ open, setOpen }) => {
     }
   }
 
+  const { mutateAsync } = useMutation({
+    mutationFn: addVoucher,
+  });
   const handleSubmitPins = async () => {
-    try {
-      const data = await addVoucher(customState.newCheckers);
-
-      if (data === "Created") {
+    mutateAsync(customState.newCheckers, {
+      onSettled: () => {
+        queryClient.invalidateQueries(["voucher"]);
+      },
+      onSuccess: (data) => {
         setAlertErr({
           severity: "info",
-          msg: "Your pins have been saved successfully!!!",
+          msg: data,
         });
         setDataPath("");
         customDispatch({ type: "newCheckers", payload: [] });
-      }
-    } catch (error) {
-      setAlertErr({
-        severity: "info",
-        msg: error,
-      });
-    }
+        // setOpen(false);
+      },
+      onError: (error) => {
+        setAlertErr({
+          severity: "info",
+          msg: error,
+        });
+      },
+    });
   };
 
   const handleCancelSubmitPins = () => {

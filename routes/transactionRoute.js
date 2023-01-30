@@ -24,6 +24,7 @@ router.post(
     const id = req.body.id;
 
     const transaction = await Transaction.findById(id);
+    transaction._doc.info.date = new Date(transaction.createdAt).toUTCString();
 
     if (_.isEmpty(transaction)) {
       return res
@@ -35,18 +36,18 @@ router.post(
     if (fs.existsSync(path.join(process.cwd(), "/vouchers/", `${id}.pdf`))) {
       //
       if (process.env.NODE_ENV === "production") {
-        await sendMail(id,transaction?.info?.agentEmail);
+        await sendMail(id, transaction?.info?.agentEmail);
       }
     } else {
-      //Generate voucher template
-      const template = await generateVoucherTemplate(transaction);
+      //Generate new voucher template
+      // const template = await generateVoucherTemplate(transaction);
 
       //Print  voucher template in pdf
-      await generateVoucher(template, id);
+      // await generateVoucher(template, id);
 
       //
       if (process.env.NODE_ENV === "production") {
-        await sendMail(id,transaction?.info?.agentEmail);
+        await sendMail(id, transaction?.info?.agentEmail);
       }
     }
 

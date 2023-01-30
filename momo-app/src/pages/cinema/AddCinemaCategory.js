@@ -37,8 +37,8 @@ const AddCinemaCategory = () => {
     price,
     theatre,
     location,
-    date: moment(date),
-    time: moment(time),
+    date: date,
+    time: time,
     message,
   };
 

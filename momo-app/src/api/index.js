@@ -9,7 +9,7 @@ import {
   deleteCategory,
 } from "./categoryAPI";
 import { getVoucherByVoucherType } from "./voucherAPI";
-
+import { getBusByVoucherType } from "./busAPI";
 import { addBeceCard } from "./cardApi";
 export default {
   //CATEGORY
@@ -18,6 +18,9 @@ export default {
   postCategory,
   editCategory,
   deleteCategory,
+
+  //Bus
+  getBusByVoucherType,
 
   //VOUCHERS
   getVoucherByVoucherType,

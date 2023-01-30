@@ -39,8 +39,8 @@ const AddStadiumCategory = () => {
     away,
     price,
     venue,
-    date: moment(date),
-    time: moment(time),
+    date: date,
+    time: time,
     message,
   };
 

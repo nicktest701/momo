@@ -9,25 +9,28 @@ const asyncHandler = require("express-async-handler");
 const Voucher = require("../models/voucherModel");
 const Transaction = require("../models/transactionModel");
 const { requestPayment } = require("../api/transaction");
+const generateQRCode = require("../config/qrcode");
 
 router.post(
   "/",
   asyncHandler(async (req, res) => {
     const {
+      category,
       totalAmount,
       categoryType,
       quantity,
       agentName,
       agentPhoneNumber,
       agentEmail,
-      dataURL,
     } = req.body;
+
     const voucher = await Voucher.find({
       category: ObjectId(categoryType?.id),
       active: true,
     })
       .populate("category")
       .limit(quantity);
+    // console.log(voucher);
 
     if (_.isEmpty(voucher)) {
       return res
@@ -35,28 +38,77 @@ router.post(
         .json("Error processing your request.Please try again later");
     }
 
-    const modifiedVoucher = voucher.map(({ category, serial, pin, _id }) => {
-      return {
-        id: _id,
-        voucherType: category.voucherType,
-        price: Number(category.price),
-        serial,
-        pin,
-      };
-    });
+    let transactionInfo = {};
 
-    const transactionInfo = {
-      info: {
-        transaction_id: crypto.randomUUID(),
-        amount: totalAmount,
-        agentName,
-        agentPhoneNumber,
-        agentEmail,
-        dataURL,
-        voucherCategory: voucher[0].category.category,
-      },
-      vouchers: modifiedVoucher,
-    };
+    if (["waec", "university"].includes(category)) {
+      const modifiedVoucher = voucher.map(({ category, serial, pin, _id }) => {
+        return {
+          id: _id,
+          voucherType: category.voucherType,
+          price: Number(category.price),
+          serial,
+          pin,
+        };
+      });
+
+      transactionInfo = {
+        info: {
+          transaction_id: crypto.randomUUID(),
+          amount: totalAmount,
+          agentName,
+          agentPhoneNumber,
+          agentEmail,
+          dataURL: categoryType.details?.voucherURL,
+          voucherCategory: category,
+        },
+        vouchers: modifiedVoucher,
+      };
+    }
+
+    if (category === "bus") {
+      // const modifiedVoucher = voucher.map(
+      //   async ({ category, serial, pin, _id }) => {
+      //     await generateQRCode(serial).then((code) => {
+      //       return {
+      //         id: _id,
+      //         voucherType: category.voucherType,
+      //         price: Number(category.price),
+      //         serial,
+      //         pin,
+      //         qrCode: code,
+      //       };
+      //     });
+      //   }
+      // );
+      await Promise.all(
+        voucher.map(async ({ category, serial, pin, _id }) => {
+          const code = await generateQRCode(serial);
+          return {
+            id: _id,
+            voucherType: category.voucherType,
+            price: Number(category.price),
+            serial,
+            pin,
+            qrCode: code,
+          };
+        })
+      ).then((vouchers) => {
+        transactionInfo = {
+          info: {
+            transaction_id: crypto.randomUUID(),
+            amount: totalAmount,
+            agentPhoneNumber,
+            agentEmail,
+            voucherCategory: category,
+            origin: voucher[0].category?.details?.origin?.city,
+            destination: voucher[0].category?.details?.destination?.city,
+            date: voucher[0].category?.details?.date,
+            time: voucher[0].category?.details?.time,
+          },
+          vouchers: vouchers,
+        };
+      });
+    }
 
     // const data = await requestPayment(agentPhoneNumber);
 
@@ -67,8 +119,10 @@ router.post(
         .status(400)
         .json("Error processing your request.Please try again");
     }
-    console.log(transaction?.info);
 
+    // transaction._doc.info.date = new Date(transaction.createdAt).toUTCString();
+    // console.log(transaction);
+    // res.status(200).json("helo");
     res.status(200).json(transaction);
   })
 );

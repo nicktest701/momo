@@ -1,4 +1,6 @@
-import { Grid, Typography, Container } from "@mui/material";
+import  Grid from '@mui/material/Grid'
+import  Typography from '@mui/material/Typography'
+import  Container from '@mui/material/Container'
 import ShopCard from "./ShopCard";
 import { IMAGES } from "../constants";
 
@@ -34,7 +36,7 @@ const homeCardArr = [
 
 function HomeCards() {
   return (
-    <Container maxWidth="md" sx={{ paddingY: 3 }}>
+    <Container maxWidth="md" sx={{ paddingY: 4 }}>
       <Typography
         variant="h4"
         sx={{

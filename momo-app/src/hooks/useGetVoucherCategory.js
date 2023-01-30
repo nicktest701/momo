@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getAllVouchersCategory } from "../api/categoryAPI";
-import _ from "lodash";
+import isEmpty from "lodash/isEmpty";
 import { getCategoryData } from "../config/getCategoryData";
 export const useGetVoucherCategory = (category) => {
   const [categories, setCategories] = useState([]);
@@ -14,9 +14,11 @@ export const useGetVoucherCategory = (category) => {
       enabled: !!category,
 
       onSuccess: (categories) => {
-        if (!_.isEmpty(categories)) {
+        if (!isEmpty(categories)) {
           const options = getCategoryData(categories);
           setCategories(options);
+        } else {
+          setCategories([]);
         }
       },
       onError: (error) => {
@@ -25,5 +27,5 @@ export const useGetVoucherCategory = (category) => {
     }
   );
 
-  return { categories, loading: cat.isFetching };
+  return { categories, loading: cat.isFetching, refetch: cat.refetch };
 };

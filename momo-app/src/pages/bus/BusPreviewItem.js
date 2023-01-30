@@ -1,13 +1,14 @@
 import React from "react";
 import { Button, Divider, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
 import { IMAGES } from "../../constants";
 
-function BusPreviewItem() {
+function BusPreviewItem({ item }) {
   const navigate = useNavigate();
 
   const handleBuyTicket = () => {
-    navigate("buy");
+    navigate(`buy/${item?._id}`, { state: item });
   };
   return (
     <>
@@ -32,12 +33,14 @@ function BusPreviewItem() {
         />
         <Stack spacing={1}>
           <Typography color="secondary" sx={{ fontWeight: "bold" }}>
-            Kumasi to Accra
+            {item.voucherType}
           </Typography>
           <Typography variant="body2">
-            {new Date().toLocaleDateString()}
+            {moment(item?.details?.date).format("dddd,Do MMMM,YYYY")}
           </Typography>
-          <Typography variant="body2">{new Date().toTimeString()}</Typography>
+          <Typography variant="body2">
+            {moment(item?.details?.time).format("h:mm a")}
+          </Typography>
           <Divider />
           <Button
             variant="contained"

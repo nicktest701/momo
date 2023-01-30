@@ -15,6 +15,8 @@ const PrintPreview = ({ info, vouchers }) => {
         <p>No data</p>
       ) : (
         vouchers?.map((voucher) => {
+
+          
           return (
             <VoucherItem key={voucher?.id} info={info} voucher={voucher} />
           );

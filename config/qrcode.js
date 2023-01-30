@@ -1,9 +1,14 @@
 const QRCode = require("qrcode");
 
-QRCode.toDataURL("rytr76577gf7765", function (err, url) {
-  console.log(url);
-});
-// QRCode.toDataURL("https://me.com", function (err, url) {
-//   console.log(url);
-// });
+async function generateQRCode(serial) {
+  try {
+    const url = await QRCode.toDataURL(serial);
 
+    return url;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+module.exports = generateQRCode;

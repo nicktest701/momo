@@ -105,7 +105,6 @@ const LoadVoucher = () => {
         options={{
           search: false,
           sorting: true,
-          filtering: true,
           exportButton: true,
           exportAllData: true,
         }}

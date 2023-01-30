@@ -1,4 +1,6 @@
 import {
+  Avatar,
+  Box,
   Button,
   Container,
   Divider,
@@ -6,7 +8,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import BusSearch from "../../components/inputs/BusSearch";
 import BusPreviewItem from "./BusPreviewItem";
 import FmdGoodSharpIcon from "@mui/icons-material/FmdGoodSharp";
@@ -15,31 +17,40 @@ import SyncAltSharpIcon from "@mui/icons-material/SyncAltSharp";
 import ArrowForward from "@mui/icons-material/ArrowForward";
 import { useLocation } from "react-router-dom";
 import DateInput from "../../components/inputs/DateInput";
+import { useQuery } from "@tanstack/react-query";
+import { getBusByVoucherType } from "../../api/busAPI";
+import bus_not_found from "../../assets/images/bus_not_found.svg";
 function BusPreview() {
+  const d = { id: "", city: "", region: "" };
   const { state } = useLocation();
 
-  const [origin, setOrigin] = useState({ id: "", city: "", region: "" });
-  const [destination, setDestination] = useState({
-    id: "",
-    city: "",
-    region: "",
-  });
+  const [origin, setOrigin] = useState(state?.searchValue?.origin ?? d);
+  const [destination, setDestination] = useState(
+    state?.searchValue?.destination ?? d
+  );
   const [date, setDate] = useState(new Date());
 
-  useEffect(() => {
-    if (state?.searchValue) {
-      setOrigin(state?.searchValue?.origin);
-      setDestination(state?.searchValue?.destination);
-    }
-  }, [state]);
+  const searchKey = useMemo(() => {
+    return `${origin?.city} to ${destination?.city}`;
+  }, [origin, destination]);
+
+  const bus = useQuery({
+    queryKey: ["bus", searchKey],
+    queryFn: () => getBusByVoucherType(searchKey),
+    enabled: !!searchKey,
+    onSuccess: (bus) => {
+      console.log(bus);
+    },
+  });
 
   return (
     <Container sx={{ minHeight: "calc(100vh - 120px)", paddingX: 4 }}>
       <Stack spacing={3}>
-        {origin.city && destination.city && (
+        {origin?.city && destination?.city && (
           <Stack direction="row" spacing={2} justifyContent="flex-end">
-            <Typography variant="h5">{origin.city}</Typography> <ArrowForward />
-            <Typography variant="h5"> {destination.city},</Typography>
+            <Typography variant="h5">{origin?.city}</Typography>
+            <ArrowForward />
+            <Typography variant="h5"> {destination?.city},</Typography>
           </Stack>
         )}
 
@@ -63,7 +74,7 @@ function BusPreview() {
             setValue={setOrigin}
             icon={<TripOriginSharpIcon color="secondary" />}
           />
-          <IconButton size='small'>
+          <IconButton size="small">
             <SyncAltSharpIcon color="dark" />
           </IconButton>
 
@@ -76,26 +87,45 @@ function BusPreview() {
           <DateInput value={date} setValue={setDate} />
           <Button
             variant="contained"
-            // onClick={handleSearch}
+            onClick={bus?.refetch}
             sx={{ minWidth: 120, padding: "15px 10px", borderRadius: 5 }}
           >
             Find Tickets
           </Button>
         </Stack>
-        <Container
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit,minmax(250px,1fr))",
-            gap: 5,
-            paddingY: 4,
-          }}
-        >
-          <BusPreviewItem />
-          <BusPreviewItem />
-          <BusPreviewItem />
-          <BusPreviewItem />
-          <BusPreviewItem />
-        </Container>
+        {bus?.isFetching && <Typography>Loading</Typography>}
+        {bus?.data?.length === 0 ? (
+          <Stack justifyContent="center" alignItems="center" spacing={2}>
+            <Avatar
+              src={bus_not_found}
+              alt="not found"
+              sx={{
+                width: { xs: 150, sm: 200, md: 250 },
+                height: { xs: 150, sm: 200, md: 250 },
+              }}
+            />
+            <Typography variant="h6" fontWeight="bold" textAlign="center">
+              Sorry we couldn't find any results
+            </Typography>
+            <Typography textAlign="center">
+              We searched and couldn't find any bus ticket which match your
+              search. Adjust your origin or destination.
+            </Typography>
+          </Stack>
+        ) : (
+          <Container
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit,minmax(250px,1fr))",
+              gap: 5,
+              paddingY: 4,
+            }}
+          >
+            {bus.data?.map((item) => (
+              <BusPreviewItem key={item._id} item={item} />
+            ))}
+          </Container>
+        )}
       </Stack>
     </Container>
   );

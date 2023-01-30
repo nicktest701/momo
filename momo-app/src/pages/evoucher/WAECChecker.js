@@ -48,6 +48,7 @@ function WAECChecker() {
   }, [categoryType, quantity]);
 
   const initialValues = {
+    category: "waec",
     categoryType,
     quantity,
     totalAmount: grandTotal,
@@ -59,9 +60,8 @@ function WAECChecker() {
     values.serviceProvider = getServiceProviderInfo.providerName;
     values.serviceProviderImage = getServiceProviderInfo.image;
     values.agentName = "Nana Akwasi";
-    values.agentPhoneNumber = "0234912834";
-    values.agentEmail = "akwasi@gmail.com";
-    values.dataURL = "ghana.waecdirect.org";
+    values.agentPhoneNumber = phoneNumber;
+    values.agentEmail = email;
 
     customDispatch({
       type: "getVoucherPaymentDetails",

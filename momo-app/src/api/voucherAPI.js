@@ -9,9 +9,6 @@ export const getVoucherByVoucherType = async (voucherType) => {
       params: {
         voucherType,
       },
-      headers: {
-        "Content-Type": "application/json",
-      },
     });
     return response.data;
   } catch (error) {
@@ -26,9 +23,6 @@ export const addVoucher = async (data) => {
       method: "POST",
       url: `${BASE_URL}/voucher`,
       data,
-      headers: {
-        "Content-Type": "application/json",
-      },
     });
     return response.data;
   } catch (error) {

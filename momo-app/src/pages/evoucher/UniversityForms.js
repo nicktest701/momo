@@ -1,22 +1,18 @@
 import React, { useMemo, useState, useContext } from "react";
-import {
-  Stack,
-  TextField,
-  Typography,
-  InputAdornment,
-  Box,
-  Button,
-  Avatar,
-  Breadcrumbs,
-  Grid,
-  Autocomplete,
-  Container,
-} from "@mui/material";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import InputAdornment from "@mui/material/InputAdornment";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Avatar from "@mui/material/Avatar";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import Grid from "@mui/material/Grid";
+import Autocomplete from "@mui/material/Autocomplete";
+import Container from "@mui/material/Container";
 import { Formik } from "formik";
 import { Link } from "react-router-dom";
-
 import logo from "../../assets/images/waec.jpg";
-
 import { currencyFormatter, getCode } from "../../constants";
 import { CustomContext } from "../../context/providers/CustomProvider";
 import { useGetVoucherCategory } from "../../hooks/useGetVoucherCategory";
@@ -29,10 +25,10 @@ function UniversityForms() {
     voucherType: "",
     price: 0,
   });
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState("Nana Akwasi");
+  const [email, setEmail] = useState("akwasi@gmail.com");
   const [quantity, setQuantity] = useState(0);
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("0244192837");
 
   ///Get All waec categories
   const { categories } = useGetVoucherCategory("university");
@@ -49,6 +45,7 @@ function UniversityForms() {
   }, [categoryType, quantity]);
 
   const initialValues = {
+    category: "university",
     categoryType,
     quantity,
     totalAmount: grandTotal,
@@ -58,14 +55,12 @@ function UniversityForms() {
   };
 
   const onSubmit = (values, options) => {
-    console.log(values);
     values.serviceProvider = getServiceProviderInfo.providerName;
     values.serviceProviderImage = getServiceProviderInfo.image;
     values.agentName = fullName;
     values.agentPhoneNumber = phoneNumber;
     values.agentEmail = email;
-    values.dataURL = "ghana.waecdirect.org";
-
+ 
     customDispatch({
       type: "getVoucherPaymentDetails",
       payload: { open: true, data: values },
@@ -77,10 +72,24 @@ function UniversityForms() {
       <Box
         sx={{
           backgroundColor: "whitesmoke",
+          height: "100%",
+          display: "grid",
+          gridTemplateRows: "auto 1fr",
         }}
       >
-        <Container maxWidth="lg" sx={{ paddingY: 2 }}>
-          <Breadcrumbs sx={{ paddingBottom: 2 }}>
+        <Container
+          maxWidth="lg"
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: 2,
+          }}
+        >
+          <Typography>UNIVERSITY FORM E-VOUCHER</Typography>
+
+          <Breadcrumbs>
             <Typography variant="body2">
               <Link to="/"> Home</Link>
             </Typography>
@@ -89,13 +98,6 @@ function UniversityForms() {
             </Typography>
             <Typography variant="body2">University Forms</Typography>
           </Breadcrumbs>
-
-          <Stack spacing={2} direction="row" alignItems="center">
-            <Avatar src={logo} sx={{ width: 30, height: 30 }} />
-            <Typography sx={{ fontSize: { xs: 14, md: 16 } }}>
-              UNIVERSITY FORM E-VOUCHER
-            </Typography>
-          </Stack>
         </Container>
 
         <Box
@@ -105,6 +107,7 @@ function UniversityForms() {
             alignItems: "center",
             background: `linear-gradient(to top right,rgba(0,0,0,0.9),rgba(0,0,0,0.9)),url(${logo})`,
             backgroundSize: "cover",
+            paddingX: 3,
             paddingY: 5,
           }}
         >
@@ -114,24 +117,17 @@ function UniversityForms() {
             enableReinitialize={true}
             onSubmit={onSubmit}
           >
-            {({
-              errors,
-              values,
-              touched,
-              handleChange,
-              handleSubmit,
-              handleBlur,
-            }) => {
+            {({ errors, values, touched, handleSubmit }) => {
               return (
                 <Container
                   sx={{
-                    maxWidth: { xs: 260, sm: 400, md: 800 },
-                    padding: { xs: 2, sm: 3 },
+                    padding: 3,
                     bgcolor: "primary.contrastText",
                   }}
+                  maxWidth="md"
                 >
                   <Grid container spacing={3} paddingBottom={3}>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} sm={6}>
                       <Stack spacing={3}>
                         <Box
                           sx={{
@@ -181,11 +177,7 @@ function UniversityForms() {
                           size="small"
                           type="number"
                           inputMode="numeric"
-                          variant="outlined"
                           label="Quantity"
-                          InputProps={{
-                            inputProps: { min: 1, max: 1000, maxLength: 4 },
-                          }}
                           required
                           fullWidth
                           value={values.quantity}
@@ -195,7 +187,6 @@ function UniversityForms() {
                         />
                         <TextField
                           size="small"
-                          variant="outlined"
                           placeholder="Total Amount"
                           label="Total Amount"
                           required
@@ -214,7 +205,7 @@ function UniversityForms() {
                         />
                       </Stack>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} sm={6}>
                       <Stack spacing={3}>
                         <Box
                           sx={{
@@ -229,7 +220,6 @@ function UniversityForms() {
 
                         <TextField
                           size="small"
-                          variant="outlined"
                           placeholder="Enter your Name"
                           label="Full Name"
                           required
@@ -242,7 +232,6 @@ function UniversityForms() {
                         <TextField
                           size="small"
                           type="email"
-                          variant="outlined"
                           label="Email Address"
                           required
                           value={values.email}
@@ -255,7 +244,6 @@ function UniversityForms() {
                           size="small"
                           type="tel"
                           inputMode="tel"
-                          variant="outlined"
                           label="Phone Number"
                           required
                           value={phoneNumber}

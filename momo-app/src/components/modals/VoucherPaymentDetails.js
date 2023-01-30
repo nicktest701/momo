@@ -1,28 +1,27 @@
-import React, { useContext, useState, forwardRef } from "react";
+import React, { useContext, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
 import Typography from "@mui/material/Typography";
-import { Box, DialogContent, IconButton, Stack } from "@mui/material";
-import Slide from "@mui/material/Slide";
-import { LoadingButton } from "@mui/lab";
-import { CloseSharp, MoneyRounded } from "@mui/icons-material";
+import DialogContent from "@mui/material/DialogContent";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+
+import LoadingButton from "@mui/lab/LoadingButton";
+import CloseSharp from "@mui/icons-material/CloseSharp";
+import MoneyRounded from "@mui/icons-material/MoneyRounded";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { CustomContext } from "../../context/providers/CustomProvider";
 import { currencyFormatter } from "../../constants";
 import { makePayment } from "../../api/paymentAPI";
-
-const Transition = forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import Transition from "../Transition";
+import VoucherPlaceHolderItem from "../items/VoucherPlaceHolderItem";
 
 function VoucherPaymentDetails() {
   const { customState, customDispatch } = useContext(CustomContext);
   const navigate = useNavigate();
-
   const [loading, setLoading] = useState(false);
-  // [msg, setMsg] = useState({ severity: "", text: "" });
 
   ///payment details
   const open = customState.voucherPaymentDetails.open;
@@ -30,7 +29,6 @@ function VoucherPaymentDetails() {
 
   //Make Payment
   const paymentMutate = useMutation(makePayment);
-
   const handlePayment = () => {
     setLoading(true);
 
@@ -74,34 +72,8 @@ function VoucherPaymentDetails() {
     });
   };
 
-  const PlaceholderItem = ({ title, value }) => {
-    return (
-      <>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexWrap: "wrap",
-          }}
-        >
-          <Typography
-            fontWeight="bold"
-            sx={{ fontSize: 14, color: "primary.main" }}
-          >
-            {title}
-          </Typography>
-          <Typography variant="body2" sx={{ maxWdith: 200 }}>
-            {value}
-          </Typography>
-        </Box>
-      </>
-    );
-  };
-
   return (
     <Dialog
-      keepMounted
       TransitionComponent={Transition}
       open={open}
       maxWidth="xs"
@@ -119,13 +91,25 @@ function VoucherPaymentDetails() {
         Payment Details
       </DialogTitle>
       <DialogContent>
-        <Typography variant="body2" sx={{ textAlign: "center" }}>
-          {payload?.categoryType?.voucherType} VOUCHER
+        <Typography
+          variant="body2"
+          fontWeight="bold"
+          textAlign="center"
+          textTransform="uppercase"
+        >
+          {payload?.categoryType?.voucherType}
+          {["bus", "stadium", "cinema"].includes(payload?.category)
+            ? ` TICKET`
+            : ` VOUCHER`}
         </Typography>
 
         <Stack spacing={1} paddingY={3}>
-          <PlaceholderItem title="Quantity" value={payload?.quantity} />
-          <PlaceholderItem
+          <VoucherPlaceHolderItem
+            title="Price"
+            value={currencyFormatter(payload?.categoryType?.price)}
+          />
+          <VoucherPlaceHolderItem title="Quantity" value={payload?.quantity} />
+          <VoucherPlaceHolderItem
             title="Total"
             value={currencyFormatter(payload?.totalAmount)}
           />
@@ -136,10 +120,13 @@ function VoucherPaymentDetails() {
           />
 
           {payload?.fullName && (
-            <PlaceholderItem title="Name" value={payload?.fullName} />
+            <VoucherPlaceHolderItem title="Name" value={payload?.fullName} />
           )}
-          <PlaceholderItem title="Email" value={payload?.email} />
-          <PlaceholderItem title="Phone Number" value={payload?.phoneNumber} />
+          <VoucherPlaceHolderItem title="Email" value={payload?.email} />
+          <VoucherPlaceHolderItem
+            title="Phone Number"
+            value={payload?.phoneNumber}
+          />
         </Stack>
         <LoadingButton
           variant="contained"

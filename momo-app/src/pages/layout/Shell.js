@@ -14,7 +14,7 @@ import SecurityService from "../evoucher/SecurityService";
 import UniversityForms from "../evoucher/UniversityForms";
 import CinemaTickets from "../evoucher/CinemaTickets";
 import StadiaTickets from "../evoucher/StadiaTickets";
-import AddVoucher from "../evoucher/add/AddVoucher";
+import Voucher from "../evoucher/add/Voucher";
 import Shop from "../evoucher/Shop";
 import Checkout from "../Checkout";
 import Payment from "../Payment";
@@ -31,12 +31,13 @@ import BusPreview from "../bus/BusPreview";
 import BookTicket from "../bus/BookTicket";
 import BusTicketCheckout from "../bus/BusTicketCheckout";
 import { Alert } from "@mui/material";
+import UniversityTemplate from "../../components/template/UniversityTemplate";
+import BusTemplateItem from "../../components/items/BusTemplateItem";
 
 function Shell() {
   const CheckoutPrint = React.lazy(() => import("../CheckoutPrint"));
   return (
     <>
-     
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Dashboard />} />
@@ -55,7 +56,7 @@ function Shell() {
             <Route path="bus-ticket" element={<Bus />}>
               <Route index element={<BusTickets />} />
               <Route path="preview" element={<BusPreview />} />
-              <Route path="preview/buy" element={<BusTicketCheckout />} />
+              <Route path="preview/buy/:id" element={<BusTicketCheckout />} />
             </Route>
 
             {/* <Route path="checker" element={<Checker />}>
@@ -70,7 +71,7 @@ function Shell() {
                 <Route
                   key={index}
                   path={item.route}
-                  element={<AddVoucher {...item} />}
+                  element={<Voucher {...item} />}
                 />
               );
             })}
@@ -90,6 +91,7 @@ function Shell() {
             </Suspense>
           }
         />
+        <Route path="test" element={<BusTemplateItem />} />
         <Route path="error" element={<ErrorPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

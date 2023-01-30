@@ -19,6 +19,25 @@ router.get(
     res.status(200).json(categories);
   })
 );
+
+//GET BUS BY DESTINATION
+router.get(
+  "/bus",
+  asyncHandler(async (req, res) => {
+    const { voucherType } = req.query;
+    console.log(voucherType);
+    const bus = await Category.find({
+      voucherType: { $regex: voucherType, $options: "i" },
+    });
+
+    if (_.isEmpty(bus)) {
+      return res.status(200).json([]);
+    }
+    console.log(bus);
+
+    res.status(200).json(bus);
+  })
+);
 router.get(
   "/:id",
   asyncHandler(async (req, res) => {

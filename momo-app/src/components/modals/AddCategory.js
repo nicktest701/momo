@@ -1,17 +1,15 @@
 import React, { useContext, useState, useMemo } from "react";
-import { LoadingButton } from "@mui/lab";
-import {
-  Autocomplete,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  InputAdornment,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
+import Autocomplete from "@mui/material/Autocomplete";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import InputAdornment from "@mui/material/InputAdornment";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Formik } from "formik";
 import { CustomContext } from "../../context/providers/CustomProvider";
@@ -39,11 +37,21 @@ const AddCategory = () => {
     category: category ?? "",
     voucherType,
     price: Number(0),
+    voucherURL: "",
   };
 
   const { mutateAsync } = useMutation(postCategory);
   const onSubmit = (values, option) => {
-    mutateAsync(values, {
+    const newCategory = {
+      category: values.category,
+      voucherType: values.voucherType,
+      price: values.price,
+      details: {
+        voucherURL: values.voucherURL,
+      },
+    };
+
+    mutateAsync(newCategory, {
       onSettled: () => {
         option.setSubmitting(false);
 
@@ -118,6 +126,13 @@ const AddCategory = () => {
                       </InputAdornment>
                     ),
                   }}
+                />
+                <TextField
+                  type="url"
+                  inputMode="url"
+                  label={`${options.autocompleteLabel} Website URL`}
+                  value={values.voucherURL}
+                  onChange={handleChange("voucherURL")}
                 />
               </Stack>
             </DialogContent>

@@ -1,5 +1,8 @@
 import React, { useContext, useMemo } from "react";
-import { Box, Button, Icon, IconButton, Stack } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
 import MaterialTable, { MTableToolbar } from "material-table";
 import Swal from "sweetalert2";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -15,6 +18,7 @@ import { deleteCategory } from "../../api/categoryAPI";
 import EditCinemaCategory from "../../pages/cinema/EditCinemaCategory";
 import EditStadiumCategory from "../../pages/stadium/EditStadiumCategory";
 import EditBusCategory from "../../pages/bus/EditBusCategory";
+import AddCategory from "../modals/AddCategory";
 
 const VoucherCategory = (props) => {
   const queryClient = useQueryClient();
@@ -110,6 +114,7 @@ const VoucherCategory = (props) => {
         </Stack>
       ),
     });
+
     return columns;
   }, [category, customDispatch, mutateAsync, queryClient]);
 
@@ -172,6 +177,8 @@ const VoucherCategory = (props) => {
           padding: "10px",
         }}
       />
+
+      <AddCategory />
       {/* cinema  */}
       <AddCinemaCategory />
       <EditCinemaCategory />

@@ -1,18 +1,19 @@
-import { ArrowBackIosSharp, Check } from "@mui/icons-material";
-import {
-  Avatar,
-  Box,
-  Container,
-  Divider,
-  IconButton,
-  Stack,
-  Typography,
-} from "@mui/material";
-import LoadingButton from "@mui/lab/LoadingButton";
 import { useContext, useState } from "react";
+import ArrowBackIosSharp from "@mui/icons-material/ArrowBackIosSharp";
+import Check from "@mui/icons-material/Check";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import LoadingButton from "@mui/lab/LoadingButton";
+
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { sendVoucherMail } from "../api/transactionAPI";
+
 import logo from "../assets/images/coat_of_arms.png";
 import success from "../assets/images/success.png";
 import CheckOutItem from "../components/items/CheckOutItem";
@@ -37,9 +38,10 @@ function Checkout() {
 
   // Public  vouchers to email
   const sendVoucher = useQuery(
-    ["publish-vouchers"],
+    ["publish-vouchers", transaction?._id],
     () => sendVoucherMail(transaction?._id),
     {
+      // enabled: false,
       enabled: !!transaction?._id,
       onSuccess: (data) => {
         setLoading(false);
@@ -66,7 +68,7 @@ function Checkout() {
       <Box
         sx={{
           minHeight: "60px",
-          backgroundColor: "#333",
+          bgcolor: "primary.main",
           padding: 4,
           display: "flex",
           justifyContent: "flex-start",
@@ -138,7 +140,7 @@ function Checkout() {
           <Stack justifyContent="center">
             <LoadingButton
               loading={loading}
-              onClick={() => sendVoucher.refetch()}
+              onClick={sendVoucher.refetch}
               endIcon={sendVoucher.data ? <Check /> : null}
             >
               {sendVoucher.isLoading && "Processing"}

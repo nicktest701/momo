@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import Alert from "@mui/material/Alert";
-import { Snackbar } from "@mui/material";
+import  Snackbar  from "@mui/material/Snackbar";
 import { CheckCircleRounded, ErrorRounded } from "@mui/icons-material";
 import { CustomContext } from "../../context/providers/CustomProvider";
 import Transition from "../Transition";

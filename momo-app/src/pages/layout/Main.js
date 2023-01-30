@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Outlet } from "react-router-dom";
 import Menu from "@mui/icons-material/Menu";
-import { Fab } from "@mui/material";
+import Fab  from "@mui/material/Fab";
 import { CustomContext } from "../../context/providers/CustomProvider";
 
 function Main() {
