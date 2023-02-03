@@ -40,10 +40,10 @@ router.post(
       }
     } else {
       //Generate new voucher template
-      // const template = await generateVoucherTemplate(transaction);
+      const template = await generateVoucherTemplate(transaction);
 
       //Print  voucher template in pdf
-      // await generateVoucher(template, id);
+     await generateVoucher(template, id);
 
       //
       if (process.env.NODE_ENV === "production") {
