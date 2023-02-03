@@ -12,7 +12,6 @@ small {
 } */
 img {
   object-fit: contain;
-  width: 100%;
   width: 35px;
   height: 35px;
 }

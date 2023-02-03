@@ -25,6 +25,17 @@ import bus1 from "../assets/images/bus2.webp";
 import bus2 from "../assets/images/bus4.png";
 import bus3 from "../assets/images/bus7.jpg";
 
+//cinema
+import poster_1 from "../assets/images/cinema/1.jpg";
+import poster_3 from "../assets/images/cinema/3.jpg";
+import poster_4 from "../assets/images/cinema/4.jpg";
+import poster_5 from "../assets/images/cinema/5.jpg";
+import poster_6 from "../assets/images/cinema/6.jpg";
+import poster_7 from "../assets/images/cinema/7.jpg";
+import poster_8 from "../assets/images/cinema/8.jpg";
+import poster_9 from "../assets/images/cinema/9.jpg";
+import poster_10 from "../assets/images/cinema/10.jpg";
+
 export const IMAGES = {
   bgImage1,
   bgImage2,
@@ -54,3 +65,15 @@ export const IMAGES = {
 };
 
 export const BUS_IMAGES = [];
+
+export const CINEMA_IMAGES = {
+  poster_1,
+  poster_3,
+  poster_4,
+  poster_5,
+  poster_6,
+  poster_7,
+  poster_8,
+  poster_9,
+  poster_10,
+};

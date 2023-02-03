@@ -5,8 +5,8 @@ export const CustomContext = React.createContext();
 function CustomProvider({ children }) {
   const initialValues = {
     alertData: {
-      severity: "info",
-      message: "Hellloooo",
+      severity: "",
+      message: "",
     },
     openSidebar: false,
     openPreviewChecker: false,

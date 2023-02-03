@@ -48,6 +48,37 @@ export const postCategory = async (newCategory) => {
 };
 
 ///
+export const postCinemaTicketCategory = async (newCinemaTicket) => {
+  console.table(newCinemaTicket);
+  const formData = new FormData();
+
+  formData.append("cinema", newCinemaTicket.cinema);
+  formData.append("category", newCinemaTicket.category);
+  formData.append("voucherType", newCinemaTicket.voucherType);
+  formData.append("price", newCinemaTicket.price);
+  formData.append("movie", newCinemaTicket.movie);
+  formData.append("theatre", newCinemaTicket.theatre);
+  formData.append("location", newCinemaTicket.location);
+  formData.append("date", newCinemaTicket.date);
+  formData.append("time", newCinemaTicket.time);
+  formData.append("message", newCinemaTicket.message);
+
+  try {
+    const res = await axios({
+      url: `${BASE_URL}/category/cinema`,
+      method: "POST",
+      data: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return res.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+///
 export const editCategory = async (updatedCategory) => {
   try {
     const res = await axios({

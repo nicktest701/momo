@@ -1,7 +1,7 @@
 import React from "react";
-import UniversityTemplateItem from "../items/UniversityTemplateItem";
+import SecurityServiceTemplateItem from "../items/SecurityServiceTemplateItem";
 
-const UniversityTemplate = ({ _id, info, vouchers, createdAt }) => {
+const SecurityServiceTemplate = ({ _id, info, vouchers, createdAt }) => {
   return (
     <div
       style={{
@@ -16,7 +16,7 @@ const UniversityTemplate = ({ _id, info, vouchers, createdAt }) => {
       ) : (
         vouchers?.map((voucher) => {
           return (
-            <UniversityTemplateItem
+            <SecurityServiceTemplateItem
               _id={_id}
               key={voucher?.id}
               info={info}
@@ -30,4 +30,4 @@ const UniversityTemplate = ({ _id, info, vouchers, createdAt }) => {
   );
 };
 
-export default UniversityTemplate;
+export default SecurityServiceTemplate;

@@ -33,6 +33,9 @@ function VoucherPaymentDetails() {
     setLoading(true);
 
     paymentMutate.mutateAsync(payload, {
+      onSettled: () => {
+        setLoading(false);
+      },
       onSuccess: (data) => {
         if (data) {
           // if (data.code === "201") {

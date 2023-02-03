@@ -1,34 +1,35 @@
-import React, { useContext, useState, useMemo } from "react";
+import React, { useContext, useState } from "react";
 import { LoadingButton } from "@mui/lab";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  InputAdornment,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import InputAdornment from "@mui/material/InputAdornment";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Formik } from "formik";
 import { CustomContext } from "../../context/providers/CustomProvider";
-import { postCategory } from "../../api/categoryAPI";
+import { postCinemaTicketCategory } from "../../api/categoryAPI";
 import Transition from "../../components/Transition";
 import moment from "moment";
 import CustomTimePicker from "../../components/inputs/CustomTimePicker";
 import CustomDatePicker from "../../components/inputs/CustomDatePicker";
+
 const AddCinemaCategory = () => {
   //context
   const queryClient = useQueryClient();
   const { customState, customDispatch } = useContext(CustomContext);
+
+  const [cinemaImage, setCinemaImage] = useState(null);
   const [voucherType, setVoucherType] = useState("");
   const [theatre, setTheatre] = useState("");
   const [location, setLocation] = useState("");
   const [time, setTime] = useState(moment());
   const [date, setDate] = useState(moment());
-  const [price, setPrice] = useState(Number(0));
+  const [price, setPrice] = useState(0);
   const [message, setMessage] = useState("");
 
   const initialValues = {
@@ -37,28 +38,26 @@ const AddCinemaCategory = () => {
     price,
     theatre,
     location,
-    date: date,
-    time: time,
+    date,
+    time,
     message,
   };
 
-  const { mutateAsync } = useMutation(postCategory);
+  const { mutateAsync } = useMutation(postCinemaTicketCategory);
   const onSubmit = (values, option) => {
     const newCinemaTicket = {
+      cinema: cinemaImage,
       category: values.category,
       voucherType: values.voucherType,
       price: values.price,
-      details: {
-        movie: values.voucherType,
-        theatre: values.theatre,
-        location: values.location,
-        date: values.date,
-        time: values.time,
-        message: values.message,
-      },
+      movie: values.voucherType,
+      theatre: values.theatre,
+      location: values.location,
+      date: values.date,
+      time: values.time,
+      message: values.message,
     };
 
-    console.log(newCinemaTicket);
     mutateAsync(newCinemaTicket, {
       onSettled: () => {
         option.setSubmitting(false);
@@ -69,9 +68,14 @@ const AddCinemaCategory = () => {
         console.log(data);
       },
       onError: (error) => {
-        console.log(error.message);
+        console.log(error);
       },
     });
+  };
+  const handleUploadFile = (e) => {
+    if (e.target.files) {
+      setCinemaImage(e.target.files[0]);
+    }
   };
 
   ///Close Add Category
@@ -96,6 +100,11 @@ const AddCinemaCategory = () => {
             <DialogTitle>New Cinema Ticket</DialogTitle>
             <DialogContent>
               <Stack rowGap={2} paddingY={2}>
+                {/* <div>
+                  <label htmlFor="cinema">Movie Album</label>
+                  <input type="file" id="cinema" onChange={handleUploadFile} />
+                </div> */}
+
                 <TextField
                   size="small"
                   label="Movie Name"

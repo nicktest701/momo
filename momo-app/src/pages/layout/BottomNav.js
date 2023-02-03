@@ -24,7 +24,7 @@ function BottomNav() {
       sx={{
         display: { xs: "block", md: "none" },
         position: "fixed",
-        bottom: bot,
+        bottom: 0,
         left: 0,
         right: 0,
         zIndex: 100,

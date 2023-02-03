@@ -40,7 +40,7 @@ router.post(
 
     let transactionInfo = {};
 
-    if (["waec", "university"].includes(category)) {
+    if (["waec", "university", "security"].includes(category)) {
       const modifiedVoucher = voucher.map(({ category, serial, pin, _id }) => {
         return {
           id: _id,
@@ -66,20 +66,6 @@ router.post(
     }
 
     if (category === "bus") {
-      // const modifiedVoucher = voucher.map(
-      //   async ({ category, serial, pin, _id }) => {
-      //     await generateQRCode(serial).then((code) => {
-      //       return {
-      //         id: _id,
-      //         voucherType: category.voucherType,
-      //         price: Number(category.price),
-      //         serial,
-      //         pin,
-      //         qrCode: code,
-      //       };
-      //     });
-      //   }
-      // );
       await Promise.all(
         voucher.map(async ({ category, serial, pin, _id }) => {
           const code = await generateQRCode(serial);

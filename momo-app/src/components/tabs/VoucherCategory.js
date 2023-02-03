@@ -21,6 +21,7 @@ import EditBusCategory from "../../pages/bus/EditBusCategory";
 import AddCategory from "../modals/AddCategory";
 
 const VoucherCategory = (props) => {
+  
   const queryClient = useQueryClient();
   const { customDispatch } = useContext(CustomContext);
   const category = localStorage.getItem("category");
@@ -194,14 +195,3 @@ const VoucherCategory = (props) => {
 };
 
 export default VoucherCategory;
-
-// if (["stadium", "cinema", "bus"].includes(category)) {
-//   const detailColumns = {
-//     title: "Details",
-//     field: "details",
-//     render: ({ details }) => {
-//       return <DetailsItem details={details} />;
-//     },
-//   };
-//   columns.push(detailColumns);
-// }

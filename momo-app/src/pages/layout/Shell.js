@@ -20,7 +20,7 @@ import Checkout from "../Checkout";
 import Payment from "../Payment";
 import NotFound from "../NotFound";
 import ErrorPage from "../ErrorPage";
-import Checker from "../evoucher/checker";
+// import Checker from "../evoucher/checker";
 import CheckerDashboard from "../evoucher/checker/CheckerDashboard";
 import { PAGES } from "../../constants";
 import AddChecker from "../evoucher/add";
@@ -28,11 +28,12 @@ import PayLoading from "../../components/PayLoading";
 import BusTickets from "../evoucher/BusTickets";
 import Bus from "../bus";
 import BusPreview from "../bus/BusPreview";
-import BookTicket from "../bus/BookTicket";
+// import BookTicket from "../bus/BookTicket";
 import BusTicketCheckout from "../bus/BusTicketCheckout";
-import { Alert } from "@mui/material";
-import UniversityTemplate from "../../components/template/UniversityTemplate";
 import BusTemplateItem from "../../components/items/BusTemplateItem";
+import Cinema from "../cinema";
+import Movie from "../cinema/Movie";
+import CinemaTicketCheckout from "../cinema/CinemaTicketCheckout";
 
 function Shell() {
   const CheckoutPrint = React.lazy(() => import("../CheckoutPrint"));
@@ -50,8 +51,13 @@ function Shell() {
             <Route path="school-placement" element={<SchoolPlacement />} />
             <Route path="security-service" element={<SecurityService />} />
             <Route path="university-form" element={<UniversityForms />} />
-            <Route path="cinema-ticket" element={<CinemaTickets />} />
             <Route path="stadia-ticket" element={<StadiaTickets />} />
+            {/* cinema  */}
+            <Route path="cinema-ticket" element={<Cinema />}>
+              <Route index element={<CinemaTickets />} />
+              <Route path="movie/:id" element={<Movie />} />
+              <Route path="movie/:id/buy" element={<CinemaTicketCheckout />} />
+            </Route>
             {/* bus */}
             <Route path="bus-ticket" element={<Bus />}>
               <Route index element={<BusTickets />} />

@@ -7,9 +7,11 @@ import {
   postCategory,
   editCategory,
   deleteCategory,
+  postCinemaTicketCategory,
 } from "./categoryAPI";
 import { getVoucherByVoucherType } from "./voucherAPI";
 import { getBusByVoucherType } from "./busAPI";
+import { getCinema } from "./cinemaAPI";
 import { addBeceCard } from "./cardApi";
 export default {
   //CATEGORY
@@ -18,7 +20,9 @@ export default {
   postCategory,
   editCategory,
   deleteCategory,
-
+  //cinema
+  postCinemaTicketCategory,
+  getCinema,
   //Bus
   getBusByVoucherType,
 

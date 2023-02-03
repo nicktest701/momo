@@ -12,6 +12,7 @@ import Scrollbars from "react-custom-scrollbars";
 import PrintPreview from "../components/items/PrintPreview";
 import UniversityTemplate from "../components/template/UniversityTemplate";
 import BusTemplate from "../components/template/BusTemplate";
+import SecurityServiceTemplate from "../components/template/SecurityServiceTemplate";
 
 const CheckoutPrint = () => {
   const navigate = useNavigate();
@@ -44,16 +45,20 @@ const CheckoutPrint = () => {
       <Divider />
       <Scrollbars autoHide style={{ minHeight: "100vh" }}>
         <div ref={componentRef}>
-          {transaction.info?.voucherCategory === "university" && (
-            <UniversityTemplate {...transaction} />
-          )}
-
           {transaction.info?.voucherCategory === "waec" && (
             <PrintPreview
               info={transaction.info}
               vouchers={transaction.vouchers}
             />
           )}
+
+          {transaction.info?.voucherCategory === "university" && (
+            <UniversityTemplate {...transaction} />
+          )}
+          {transaction.info?.voucherCategory === "security" && (
+            <SecurityServiceTemplate {...transaction} />
+          )}
+
           {transaction.info?.voucherCategory === "bus" && (
             <BusTemplate {...transaction} />
           )}

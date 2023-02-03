@@ -1,13 +1,20 @@
 import styles from "../../styles/University.module.css";
 import coat_of_arms from "../../assets/images/coat_of_arms.png";
 import { currencyFormatter } from "../../constants";
-function UniversityTemplateItem({ _id, voucher, info, createdAt }) {
+function SecurityServiceTemplateItem({ _id, voucher, info, createdAt }) {
   return (
     <div className={styles.template}>
       <small>Receipt</small>
       <div className={styles.wrapper}>
         <div className={styles.image_container}>
-          <img src={coat_of_arms} alt="logo.png" />
+          <img
+            src={coat_of_arms}
+            alt="logo.png"
+            style={{
+              width: "35px",
+              height: "35px",
+            }}
+          />
           <h1>Frebby Tech Consults</h1>
         </div>
 
@@ -82,4 +89,4 @@ function UniversityTemplateItem({ _id, voucher, info, createdAt }) {
   );
 }
 
-export default UniversityTemplateItem;
+export default SecurityServiceTemplateItem;
