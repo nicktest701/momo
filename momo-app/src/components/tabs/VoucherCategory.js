@@ -21,103 +21,79 @@ import EditBusCategory from "../../pages/bus/EditBusCategory";
 import AddCategory from "../modals/AddCategory";
 
 const VoucherCategory = (props) => {
-  
   const queryClient = useQueryClient();
   const { customDispatch } = useContext(CustomContext);
   const category = localStorage.getItem("category");
   const { categories, loading } = useGetVoucherCategory(category);
 
-  const { mutateAsync } = useMutation({
-    mutationFn: deleteCategory,
-  });
-
-  const modifiedColumns = useMemo(() => {
-    const columns = getColumns(category).map((column) => {
-      return { ...column };
+  function removeCategory(id) {
+    Swal.fire({
+      title: "Removing",
+      text: "Do you want to remove?",
+      backdrop: false,
+      showCancelButton: true,
+    }).then(({ isConfirmed }) => {
+      if (isConfirmed) {
+        mutateAsync(id, {
+          onSettled: () => {
+            queryClient.invalidateQueries(["category"]);
+          },
+          onSuccess: (data) => {
+            alert(data);
+          },
+          onError: (error) => {
+            alert(error);
+          },
+        });
+      }
     });
+  }
 
-    function removeCategory(id) {
-      Swal.fire({
-        title: "Removing",
-        text: "Do you want to remove?",
-        backdrop: false,
-        showCancelButton: true,
-      }).then(({ isConfirmed }) => {
-        if (isConfirmed) {
-          mutateAsync(id, {
-            onSettled: () => {
-              queryClient.invalidateQueries(["category"]);
-            },
-            onSuccess: (data) => {
-              alert(data);
-            },
-            onError: (error) => {
-              alert(error);
-            },
-          });
-        }
-      });
-    }
-
-    const handleOpenEdit = (id) => {
-      if (category === "cinema") {
-        customDispatch({
-          type: "openEditCinemaCategory",
-          payload: {
-            open: true,
-            data: id,
-          },
-        });
-        return;
-      }
-      if (category === "stadium") {
-        customDispatch({
-          type: "openEditStadiumCategory",
-          payload: {
-            open: true,
-            data: id,
-          },
-        });
-        return;
-      }
-      if (category === "bus") {
-        customDispatch({
-          type: "openEditBusCategory",
-          payload: {
-            open: true,
-            data: id,
-          },
-        });
-        return;
-      }
-
+  const handleOpenEdit = (id) => {
+    if (category === "cinema") {
       customDispatch({
-        type: "openEditCategory",
+        type: "openEditCinemaCategory",
         payload: {
           open: true,
           data: id,
         },
       });
       return;
-    };
+    }
+    if (category === "stadium") {
+      customDispatch({
+        type: "openEditStadiumCategory",
+        payload: {
+          open: true,
+          data: id,
+        },
+      });
+      return;
+    }
+    if (category === "bus") {
+      customDispatch({
+        type: "openEditBusCategory",
+        payload: {
+          open: true,
+          data: id,
+        },
+      });
+      return;
+    }
 
-    columns.push({
-      field: null,
-      title: "Action",
-      render: ({ id }) => (
-        <Stack direction="row" spacing={1}>
-          <IconButton onClick={() => handleOpenEdit(id)}>
-            <EditRounded />
-          </IconButton>
-          <IconButton onClick={() => removeCategory(id)}>
-            <DeleteRounded />
-          </IconButton>
-        </Stack>
-      ),
+    customDispatch({
+      type: "openEditCategory",
+      payload: {
+        open: true,
+        data: id,
+      },
     });
+    return;
+  };
 
-    return columns;
-  }, [category, customDispatch, mutateAsync, queryClient]);
+  const { mutateAsync } = useMutation({
+    mutationFn: deleteCategory,
+  });
 
   const handleOpenAdd = () => {
     if (category === "cinema") {
@@ -136,6 +112,28 @@ const VoucherCategory = (props) => {
     customDispatch({ type: "openAddCategory", payload: true });
     return;
   };
+
+  const modifiedColumns = [
+    ...getColumns(category),
+    {
+      field: null,
+      title: "Action",
+      render: ({ id }) => (
+        <Stack direction="row" spacing={1}>
+          <IconButton onClick={() => handleOpenEdit(id)}>
+            <EditRounded />
+          </IconButton>
+          <IconButton onClick={() => removeCategory(id)}>
+            <DeleteRounded />
+          </IconButton>
+        </Stack>
+      ),
+    },
+  ];
+
+  const columns = modifiedColumns.map((column) => {
+    return { ...column };
+  });
 
   return (
     <Box
@@ -164,7 +162,7 @@ const VoucherCategory = (props) => {
             );
           },
         }}
-        columns={modifiedColumns}
+        columns={columns}
         isLoading={loading}
         data={categories}
         options={{

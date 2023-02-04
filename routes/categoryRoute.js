@@ -17,7 +17,6 @@ const Storage = multer.diskStorage({
 });
 const upload = multer({ storage: Storage });
 
-
 //GET Voucher by category
 router.get(
   "/",
@@ -54,9 +53,6 @@ router.get(
     res.status(200).json(bus);
   })
 );
-
-
-
 
 router.get(
   "/:id",
@@ -103,16 +99,15 @@ router.post(
         location: newCinemaTicket.location,
         date: newCinemaTicket.date,
         time: newCinemaTicket.time,
+        description: newCinemaTicket.description,
         message: newCinemaTicket.message,
       },
     };
 
     const category = await Category.create(newTicket);
-    
+
     if (_.isEmpty(category)) {
-      return res
-        .status(404)
-        .json("Error adding category.Please try later!!!");
+      return res.status(404).json("Error adding category.Please try later!!!");
     }
 
     console.log(category);

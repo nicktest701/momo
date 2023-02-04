@@ -34,10 +34,10 @@ router.post(
 
     //Check if voucher pdf already exists
     if (fs.existsSync(path.join(process.cwd(), "/vouchers/", `${id}.pdf`))) {
-      //
-      // if (process.env.NODE_ENV === "production") {
-      // }
-      await sendMail(id, transaction?.info?.agentEmail);
+      
+      if (process.env.NODE_ENV === "production") {
+        await sendMail(id, transaction?.info?.agentEmail);
+      }
     } else {
       //Generate new voucher template
       const template = await generateVoucherTemplate(transaction);
@@ -47,11 +47,11 @@ router.post(
 
       //
     
-        await sendMail(id, transaction?.info?.agentEmail);
+      // await sendMail(id, transaction?.info?.agentEmail);
       
-      // if (process.env.NODE_ENV === "production") {
-      //   await sendMail(id, transaction?.info?.agentEmail);
-      // }
+      if (process.env.NODE_ENV === "production") {
+        await sendMail(id, transaction?.info?.agentEmail);
+      }
     }
 
     res.status(200).send(id);

@@ -1,6 +1,6 @@
-import  Grid from '@mui/material/Grid'
-import  Typography from '@mui/material/Typography'
-import  Container from '@mui/material/Container'
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
 import ShopCard from "./ShopCard";
 import { IMAGES } from "../constants";
 
@@ -36,7 +36,7 @@ const homeCardArr = [
 
 function HomeCards() {
   return (
-    <Container maxWidth="md" sx={{ paddingY: 4 }}>
+    <Container maxWidth="md" sx={{ paddingY: 6, paddingX: { xs: 3} }}>
       <Typography
         variant="h4"
         sx={{
@@ -47,7 +47,7 @@ function HomeCards() {
         Our Services
       </Typography>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={3} paddingY={3}>
         {homeCardArr.map((home) => {
           return (
             <Grid item sm={6} md={4} key={home.id}>

@@ -107,7 +107,7 @@ function SecurityService() {
           background: `linear-gradient(to top right,rgba(0,0,0,0.9),rgba(0,0,0,0.9)),url(${logo})`,
           // backgroundSize: "cover",
           paddingX: 3,
-          paddingY: 5,
+          paddingY: 10,
         }}
       >
         <Formik

@@ -60,7 +60,7 @@ function UniversityForms() {
     values.agentName = fullName;
     values.agentPhoneNumber = phoneNumber;
     values.agentEmail = email;
- 
+
     customDispatch({
       type: "getVoucherPaymentDetails",
       payload: { open: true, data: values },
@@ -108,7 +108,7 @@ function UniversityForms() {
             background: `linear-gradient(to top right,rgba(0,0,0,0.9),rgba(0,0,0,0.9)),url(${logo})`,
             backgroundSize: "cover",
             paddingX: 3,
-            paddingY: 5,
+            paddingY: 10,
           }}
         >
           <Formik
@@ -126,7 +126,7 @@ function UniversityForms() {
                   }}
                   maxWidth="md"
                 >
-                  <Grid container spacing={3} paddingBottom={3}>
+                  <Grid container spacing={3} >
                     <Grid item xs={12} sm={6}>
                       <Stack spacing={3}>
                         <Box

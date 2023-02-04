@@ -11,7 +11,7 @@ function AvailableTickets() {
     queryKey: ["movie-category"],
     queryFn: () => getAllVouchersCategory("cinema"),
     onSuccess: (cinemaTickets) => {
-      console.log(cinemaTickets);
+  
       setMovies(cinemaTickets);
     },
   });
@@ -25,7 +25,7 @@ function AvailableTickets() {
       }}
     >
       {movies?.length !== 0
-        ? movies.map((movie) => (
+        ? movies?.map((movie) => (
             <AvailableCinemaTicketItem key={movie?._id} {...movie} />
           ))
         : null}

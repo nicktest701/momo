@@ -60,7 +60,7 @@ function CinemaTicketCheckout() {
     return getCode(phoneNumber);
   }, [phoneNumber]);
 
-  const bus = useQuery({
+  const cinema = useQuery({
     queryKey: ["cinema-category"],
     queryFn: () => getCategory(id),
     enabled: !!id,
@@ -74,9 +74,9 @@ function CinemaTicketCheckout() {
   const initialValues = {
     category: "cinema",
     categoryType: {
-      id: bus?.data?._id,
-      voucherType: bus?.data?.voucherType,
-      price: bus?.data?.price,
+      id: cinema?.data?._id,
+      voucherType: cinema?.data?.voucherType,
+      price: cinema?.data?.price,
     },
     email,
     phoneNumber,
@@ -97,7 +97,7 @@ function CinemaTicketCheckout() {
   };
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" sx={{paddingBottom:4}}>
       <Back />
       <Stack direction="row" justifyContent="flex-end" spacing={2} paddingY={2}>
         <Typography variant="h5">Check Out</Typography>
@@ -116,7 +116,7 @@ function CinemaTicketCheckout() {
       >
         Movie Ticket Details
       </Typography>
-      {bus?.isLoading && <PayLoading />}
+      {cinema?.isLoading && <PayLoading />}
 
       <Stack
         direction={{ xs: "column", md: "row" }}
@@ -141,11 +141,11 @@ function CinemaTicketCheckout() {
               height: "300px",
               objectFit: "contain",
             }}
-            alt="bus_image"
+            alt="cinema_image"
           />
           <Stack spacing={1} justifyContent="center" alignItems="center">
             <Typography color="secondary" sx={{ fontWeight: "bold" }}>
-              {bus?.data?.details?.movie}
+              {cinema?.data?.details?.movie}
             </Typography>
             <Typography variant="body2">
               {moment(date).format("dddd,Do MMMM,YYYY")}
@@ -155,7 +155,7 @@ function CinemaTicketCheckout() {
               {moment(time).format("h:mm a")}
             </Typography>
             <Typography variant="h6">
-              {currencyFormatter(bus?.data?.price)}
+              {currencyFormatter(cinema?.data?.price)}
             </Typography>
 
             <Stack
@@ -205,7 +205,7 @@ function CinemaTicketCheckout() {
             <ListItem divider>
               <ListItemText primary="Price" />
               <ListItemSecondaryAction>
-                {currencyFormatter(bus?.data?.price)}
+                {currencyFormatter(cinema?.data?.price)}
               </ListItemSecondaryAction>
             </ListItem>
             <ListItem divider>

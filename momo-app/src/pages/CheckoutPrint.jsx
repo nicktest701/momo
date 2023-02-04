@@ -13,6 +13,8 @@ import PrintPreview from "../components/items/PrintPreview";
 import UniversityTemplate from "../components/template/UniversityTemplate";
 import BusTemplate from "../components/template/BusTemplate";
 import SecurityServiceTemplate from "../components/template/SecurityServiceTemplate";
+import CinemaTemplate from "../components/template/CinemaTemplate";
+import { PrintRounded } from "@mui/icons-material";
 
 const CheckoutPrint = () => {
   const navigate = useNavigate();
@@ -33,11 +35,17 @@ const CheckoutPrint = () => {
       <Stack
         direction={{ xs: "column", sm: "row" }}
         justifyContent="space-between"
+        spacing={3}
+        paddingBottom={2}
       >
         <Typography variant="h4">Vouchers</Typography>
         <ReactToPrint
           pageStyle={'width:8.5in";min-height:11in"; margin:auto",padding:8px;'}
-          trigger={() => <Button>Print Vouchers</Button>}
+          trigger={() => (
+            <Button variant="outlined" startIcon={<PrintRounded />}>
+              Print Vouchers
+            </Button>
+          )}
           content={() => componentRef.current}
           documentTitle="Vouchers"
         />
@@ -61,6 +69,10 @@ const CheckoutPrint = () => {
 
           {transaction.info?.voucherCategory === "bus" && (
             <BusTemplate {...transaction} />
+          )}
+
+          {transaction.info?.voucherCategory === "cinema" && (
+            <CinemaTemplate {...transaction} />
           )}
         </div>
       </Scrollbars>

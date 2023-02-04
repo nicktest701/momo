@@ -13,11 +13,11 @@ function Shop() {
         url(${IMAGES.waec2}); `,
         backgroundSize: "cover",
         backgroundAttachment: "fixed",
-        minHeight: "100vh",
+        minHeight: "100%",
       }}
     >
       <Container maxWidth="md">
-        <Grid container spacing={3}>
+        <Grid container spacing={3} paddingY={3}>
           {shopRows.map((shop) => (
             <Grid item sm={6} md={4} key={shop.id}>
               <ShopCard {...shop} />

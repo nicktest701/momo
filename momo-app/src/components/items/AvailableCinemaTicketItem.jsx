@@ -29,8 +29,8 @@ function AvailableCinemaTicketItem({ _id, price, details }) {
       <img
         alt="album"
         src={
-          // `${process.env.REACT_APP_API_LOCAL}/images/cinema/${details.cinema}` ??
-          CINEMA_IMAGES.poster_10
+          `${process.env.REACT_APP_API_LOCAL}/images/cinema/${details.cinema}` ??
+          null
         }
         style={{
           width: "100%",

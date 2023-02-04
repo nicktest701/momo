@@ -31,6 +31,7 @@ const AddCinemaCategory = () => {
   const [date, setDate] = useState(moment());
   const [price, setPrice] = useState(0);
   const [message, setMessage] = useState("");
+  const [description, setDescription] = useState("");
 
   const initialValues = {
     category: "cinema",
@@ -41,6 +42,7 @@ const AddCinemaCategory = () => {
     date,
     time,
     message,
+    description,
   };
 
   const { mutateAsync } = useMutation(postCinemaTicketCategory);
@@ -56,6 +58,7 @@ const AddCinemaCategory = () => {
       date: values.date,
       time: values.time,
       message: values.message,
+      description: values.description,
     };
 
     mutateAsync(newCinemaTicket, {
@@ -100,10 +103,14 @@ const AddCinemaCategory = () => {
             <DialogTitle>New Cinema Ticket</DialogTitle>
             <DialogContent>
               <Stack rowGap={2} paddingY={2}>
-                {/* <div>
+                <div>
                   <label htmlFor="cinema">Movie Album</label>
-                  <input type="file" id="cinema" onChange={handleUploadFile} />
-                </div> */}
+                  <input
+                    type="file"
+                    id="cinema"
+                    onChange={(e) => handleUploadFile(e)}
+                  />
+                </div>
 
                 <TextField
                   size="small"
@@ -178,6 +185,17 @@ const AddCinemaCategory = () => {
                       helperText={touched.time && errors.time}
                     />
                   )}
+                />
+
+                <TextField
+                  size="small"
+                  label="Movie Description"
+                  multiline
+                  rows={3}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  error={Boolean(touched.description && errors.description)}
+                  helperText={touched.description && errors.description}
                 />
 
                 <TextField

@@ -34,6 +34,7 @@ import BusTemplateItem from "../../components/items/BusTemplateItem";
 import Cinema from "../cinema";
 import Movie from "../cinema/Movie";
 import CinemaTicketCheckout from "../cinema/CinemaTicketCheckout";
+import CinemaTemplateItem from "../../components/items/CinemaTemplateItem";
 
 function Shell() {
   const CheckoutPrint = React.lazy(() => import("../CheckoutPrint"));
@@ -97,7 +98,7 @@ function Shell() {
             </Suspense>
           }
         />
-        <Route path="test" element={<BusTemplateItem />} />
+        <Route path="test" element={<CinemaTemplateItem />} />
         <Route path="error" element={<ErrorPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -52,12 +52,7 @@ footer {
   justify-content: center;
   align-items: center;
 }
-.content {
-  width: min(1000px, 100%);
-  padding: 16px !important;
-  background-color: transparent;
-  margin-inline: auto;
-}
+
 .dashboard {
   position: relative;
 }

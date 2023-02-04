@@ -1,23 +1,38 @@
-import { AirplaneTicketRounded } from "@mui/icons-material";
-import { Button, Stack, Typography } from "@mui/material";
+import { MovieCreation } from "@mui/icons-material";
+import { Button, Typography } from "@mui/material";
+import moment from "moment";
+import { useNavigate } from "react-router-dom";
+import { CINEMA_IMAGES } from "../constants";
 
 import styles from "../styles/Movie.module.css";
-function MovieSwiperContent({ content, img }) {
+function MovieSwiperContent({ id, content }) {
+  const navigate = useNavigate();
+
+  const url =
+    content?.cinema !== null || content?.cinema !== undefined
+      ? `${process.env.REACT_APP_API_LOCAL}/images/cinema/${content?.cinema}`
+      : CINEMA_IMAGES.poster_1;
   return (
     <>
       <div className={styles.swiper_content}>
-        <Typography variant="h4">The Sin City</Typography>
-        <Typography variant='body2'>{new Date().toUTCString()}</Typography>
-        <Typography variant="caption">National Theatre</Typography>
+        <Typography variant="h4">{content?.movie}</Typography>
+        <Typography variant="caption">{content?.theatre}</Typography>
+        <Typography variant="body2">
+          {moment(content?.date).format("Do MMMM YYYY")}
+        </Typography>
+        <Typography variant="body2">
+          {moment(content?.time).format("h:mm a")}
+        </Typography>
         <Button
           variant="contained"
           color="secondary"
-          endIcon={<AirplaneTicketRounded />}
+          endIcon={<MovieCreation />}
+          onClick={() => navigate(`movie/${id}`)}
         >
           Buy Ticket
         </Button>
       </div>
-      <img src={img} alt="swiper-img" />
+      <img src={url} alt="swiper-img" />
     </>
   );
 }

@@ -47,7 +47,7 @@ app.use(compression());
 
 app.use("/views", express.static(path.join(__dirname, "views")));
 app.use("/vouchers", express.static(path.join(__dirname, "vouchers")));
-app.use(express.static(path.join(__dirname, "images")));
+app.use("/images", express.static(path.join(__dirname, "images")));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/category", categoryRoute);
@@ -55,9 +55,11 @@ app.use("/voucher", voucherRoute);
 app.use("/payment", paymentRoute);
 app.use("/transaction", transactionRoute);
 
-app.get("/*", function (req, res) {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
+
+
+// app.get("/*", function (req, res) {
+//   res.sendFile(path.join(__dirname, "public", "index.html"));
+// });
 
 // app.get("/", (req, res) => {
 //   res.render("university");

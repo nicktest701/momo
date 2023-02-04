@@ -73,16 +73,28 @@ function WAECChecker() {
     <>
       <Box
         sx={{
-          backgroundColor: "whitesmoke",
+          background: `linear-gradient(to top right,rgba(0,0,0,0.9),rgba(0,0,0,0.9)),url(${IMAGES.waec1})`,
+          height: "100%",
+          display: "grid",
+          gridTemplateRows: "auto 1fr",
+          rowGap: 4,
+          paddingBottom: 4,
         }}
       >
         <Container
-          maxWidth="lg"
+          maxWidth="xl"
           sx={{
-            paddingY: 2,
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            justifyContent: "space-between",
+            alignItems: "center",
+            backgroundColor: "whitesmoke",
+            padding: 2,
           }}
         >
-          <Breadcrumbs sx={{ paddingBottom: 2 }}>
+          <Typography>WAEC CHECKERS E-VOUCHER</Typography>
+
+          <Breadcrumbs>
             <Typography variant="body2">
               <Link to="/"> Home</Link>
             </Typography>
@@ -91,159 +103,147 @@ function WAECChecker() {
             </Typography>
             <Typography variant="body2">WAEC Checker</Typography>
           </Breadcrumbs>
-
-          <Stack spacing={2} direction="row" alignItems="center">
-            <Avatar src={IMAGES.waec1} sx={{ width: 30, height: 30 }} />
-            <Typography variant="h6">WAEC Results E-Voucher</Typography>
-          </Stack>
         </Container>
 
-        <Box
+        <Container
+          maxWidth="xs"
           sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            background: `linear-gradient(to top right,rgba(0,0,0,0.9),rgba(0,0,0,0.9)),url(${IMAGES.waec1})`,
-            backgroundSize: "cover",
-            paddingY: 5,
-            minHeight: "80vh",
+            height: "100%",
+            paddingX: { xs: 4 },
           }}
         >
-          <Paper
-            sx={{
-              width: { xs: 260, md: 350 },
-              padding: { xs: 2, sm: 3 },
-            }}
+          <Formik
+            initialValues={initialValues}
+            validationSchema={waecValidationSchema}
+            enableReinitialize={true}
+            onSubmit={onSubmit}
           >
-            <Formik
-              initialValues={initialValues}
-              validationSchema={waecValidationSchema}
-              enableReinitialize={true}
-              onSubmit={onSubmit}
-            >
-              {({
-                errors,
-                values,
-                touched,
-                handleChange,
-                handleSubmit,
-                handleBlur,
-              }) => {
-                return (
-                  <Stack spacing={2}>
-                    <Autocomplete
-                      options={categories}
-                      size="small"
-                      value={categoryType}
-                      onChange={(e, value) => setCategoryType(value)}
-                      noOptionsText="No Voucher available"
-                      isOptionEqualToValue={(option, value) =>
-                        value.id === undefined ||
-                        value.id === "" ||
-                        option.id === value.id
-                      }
-                      getOptionLabel={(option) => option.voucherType || ""}
-                      renderInput={(params) => {
-                        return (
-                          <TextField
-                            {...params}
-                            label=" Voucher Type"
-                            size="small"
-                            error={Boolean(
-                              touched?.categoryType?.voucherType &&
-                                errors?.categoryType?.voucherType
-                            )}
-                            helperText={
-                              touched?.categoryType?.voucherType &&
+            {({
+              errors,
+              values,
+              touched,
+              handleChange,
+              handleSubmit,
+              handleBlur,
+            }) => {
+              return (
+                <Stack
+                  spacing={2}
+                  padding={2}
+                  sx={{
+                    bgcolor: "primary.contrastText",
+                  }}
+                >
+                  <Autocomplete
+                    options={categories}
+                    size="small"
+                    value={categoryType}
+                    onChange={(e, value) => setCategoryType(value)}
+                    noOptionsText="No Voucher available"
+                    isOptionEqualToValue={(option, value) =>
+                      value.id === undefined ||
+                      value.id === "" ||
+                      option.id === value.id
+                    }
+                    getOptionLabel={(option) => option.voucherType || ""}
+                    renderInput={(params) => {
+                      return (
+                        <TextField
+                          {...params}
+                          label=" Voucher Type"
+                          size="small"
+                          error={Boolean(
+                            touched?.categoryType?.voucherType &&
                               errors?.categoryType?.voucherType
-                            }
+                          )}
+                          helperText={
+                            touched?.categoryType?.voucherType &&
+                            errors?.categoryType?.voucherType
+                          }
+                        />
+                      );
+                    }}
+                  />
+                  <small>Price- {currencyFormatter(categoryType?.price)}</small>
+
+                  <TextField
+                    size="small"
+                    type="number"
+                    inputMode="numeric"
+                    variant="outlined"
+                    label="Quantity"
+                    InputProps={{
+                      inputProps: { min: 1, max: 1000, maxLength: 4 },
+                    }}
+                    required
+                    fullWidth
+                    value={values.quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    error={Boolean(touched.quantity && errors.quantity)}
+                    helperText={touched.quantity && errors.quantity}
+                  />
+                  <TextField
+                    size="small"
+                    variant="outlined"
+                    placeholder="Total Amount"
+                    label="Total Amount"
+                    required
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">GH¢</InputAdornment>
+                      ),
+                      endAdornment: (
+                        <InputAdornment position="end">p</InputAdornment>
+                      ),
+                      readOnly: true,
+                    }}
+                    value={values.totalAmount}
+                  />
+                  <TextField
+                    size="small"
+                    type="email"
+                    variant="outlined"
+                    label="Email Address"
+                    required
+                    value={values.email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    error={Boolean(touched.email && errors.email)}
+                    helperText={touched.email && errors.email}
+                  />
+
+                  <TextField
+                    size="small"
+                    type="tel"
+                    inputMode="tel"
+                    variant="outlined"
+                    label="Phone Number"
+                    required
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    error={Boolean(touched.phoneNumber && errors.phoneNumber)}
+                    helperText={touched.phoneNumber && errors.phoneNumber}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Avatar
+                            variant="square"
+                            src={getServiceProviderInfo?.image}
+                            sx={{ width: 25, height: 20, marginRight: 2 }}
                           />
-                        );
-                      }}
-                    />
-                    <small>
-                      Price- {currencyFormatter(categoryType?.price)}
-                    </small>
-
-                    <TextField
-                      size="small"
-                      type="number"
-                      inputMode="numeric"
-                      variant="outlined"
-                      label="Quantity"
-                      InputProps={{
-                        inputProps: { min: 1, max: 1000, maxLength: 4 },
-                      }}
-                      required
-                      fullWidth
-                      value={values.quantity}
-                      onChange={(e) => setQuantity(e.target.value)}
-                      error={Boolean(touched.quantity && errors.quantity)}
-                      helperText={touched.quantity && errors.quantity}
-                    />
-                    <TextField
-                      size="small"
-                      variant="outlined"
-                      placeholder="Total Amount"
-                      label="Total Amount"
-                      required
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">GH¢</InputAdornment>
-                        ),
-                        endAdornment: (
-                          <InputAdornment position="end">p</InputAdornment>
-                        ),
-                        readOnly: true,
-                      }}
-                      value={values.totalAmount}
-                    />
-                    <TextField
-                      size="small"
-                      type="email"
-                      variant="outlined"
-                      label="Email Address"
-                      required
-                      value={values.email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      error={Boolean(touched.email && errors.email)}
-                      helperText={touched.email && errors.email}
-                    />
-
-                    <TextField
-                      size="small"
-                      type="tel"
-                      inputMode="tel"
-                      variant="outlined"
-                      label="Phone Number"
-                      required
-                      value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                      error={Boolean(touched.phoneNumber && errors.phoneNumber)}
-                      helperText={touched.phoneNumber && errors.phoneNumber}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <Avatar
-                              variant="square"
-                              src={getServiceProviderInfo?.image}
-                              sx={{ width: 25, height: 20, marginRight: 2 }}
-                            />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                    <Stack spacing={1} paddingY={1}>
-                      <Button variant="contained" onClick={handleSubmit}>
-                        Buy
-                      </Button>
-                    </Stack>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  <Stack spacing={1} paddingY={1}>
+                    <Button variant="contained" onClick={handleSubmit}>
+                      Buy
+                    </Button>
                   </Stack>
-                );
-              }}
-            </Formik>
-          </Paper>
-        </Box>
+                </Stack>
+              );
+            }}
+          </Formik>
+        </Container>
       </Box>
     </>
   );

@@ -65,7 +65,7 @@ router.post(
       };
     }
 
-    if (category === "bus") {
+    if (category === "bus" || category === "cinema") {
       await Promise.all(
         voucher.map(async ({ category, serial, pin, _id }) => {
           const code = await generateQRCode(serial);
@@ -79,20 +79,43 @@ router.post(
           };
         })
       ).then((vouchers) => {
-        transactionInfo = {
-          info: {
-            transaction_id: crypto.randomUUID(),
-            amount: totalAmount,
-            agentPhoneNumber,
-            agentEmail,
-            voucherCategory: category,
-            origin: voucher[0].category?.details?.origin?.city,
-            destination: voucher[0].category?.details?.destination?.city,
-            date: voucher[0].category?.details?.date,
-            time: voucher[0].category?.details?.time,
-          },
-          vouchers: vouchers,
-        };
+        if (category === "bus") {
+          transactionInfo = {
+            info: {
+              transaction_id: crypto.randomUUID(),
+              amount: totalAmount,
+              agentPhoneNumber,
+              agentEmail,
+              voucherCategory: category,
+              origin: voucher[0].category?.details?.origin?.city,
+              destination: voucher[0].category?.details?.destination?.city,
+              date: voucher[0].category?.details?.date,
+              time: voucher[0].category?.details?.time,
+            },
+            vouchers: vouchers,
+          };
+          return;
+        }
+
+        if (category === "cinema") {
+          transactionInfo = {
+            info: {
+              transaction_id: crypto.randomUUID(),
+              amount: totalAmount,
+              agentPhoneNumber,
+              agentEmail,
+              voucherCategory: category,
+              movie: voucher[0].category?.details?.movie,
+              theatre: voucher[0].category?.details?.theatre,
+              location: voucher[0].category?.details?.location,
+              date: voucher[0].category?.details?.date,
+              time: voucher[0].category?.details?.time,
+            },
+            vouchers: vouchers,
+          };
+
+          return;
+        }
       });
     }
 
@@ -107,7 +130,7 @@ router.post(
     }
 
     // transaction._doc.info.date = new Date(transaction.createdAt).toUTCString();
-    // console.log(transaction);
+     console.log(transaction);
     // res.status(200).json("helo");
     res.status(200).json(transaction);
   })
